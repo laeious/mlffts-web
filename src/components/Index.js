@@ -40,9 +40,9 @@ function App() {
                                 </div>
 
 
-                                <a className="button line-btn is-fullwidth">
-                                    {/* <img src="/images/btn_base.png" alt="LINE_icon" className="line-icon"/> */}
-
+                                <a className="button line-btn is-fullwidth"
+                                    href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https%3A%2F%2Fmlffts-web.herokuapp.com%2Fauth&state=12345abcde&scope=openid%20profile"
+                                    >
                                     Log in with LINE
                                     </a>
 
