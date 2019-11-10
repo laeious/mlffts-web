@@ -5,8 +5,13 @@
 .test {
   border: 1px solid black;
 }
+.move-right {
+  display:flex; 
+  justify-content:flex-end;
+}
 .btw {
   margin: 10px 0;
+  display: block;
 }
 .line-btn{
   color: #FFFFFF;

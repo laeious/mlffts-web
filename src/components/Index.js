@@ -26,11 +26,10 @@ function App() {
                                 <div className="columns is-marginless">
                                     <div className="column is-paddingless">
 
-                                    <div className="is-pulled-right ">
-
-                                        <button class="button is-text has-text-grey-dark link-btn">Sign Up</button>
-                                        <button class="button is-text has-text-grey-dark link-btn">Forget Password</button>
-                                    </div>
+                                            <div className="move-right">
+                                                <button class="button is-text has-text-grey-dark link-btn">Sign Up</button>
+                                                <button class="button is-text has-text-grey-dark link-btn">Forget Password</button>
+                                            </div>
 
                                     </div>
                                 </div>
@@ -42,7 +41,7 @@ function App() {
 
                                 <a className="button line-btn is-fullwidth"
                                     href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https%3A%2F%2Fmlffts-web.herokuapp.com%2F&state=12345abcde&scope=openid%20profile"
-                                    >
+                                >
                                     Log in with LINE
                                     </a>
 
