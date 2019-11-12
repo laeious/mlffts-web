@@ -1,6 +1,8 @@
 import React from 'react';
 import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 import axios from 'axios';
+import qs from 'qs';
+
 class Index extends React.Component {
 
     constructor(props) {
@@ -21,19 +23,20 @@ class Index extends React.Component {
         if (start_index !== -1) {
             const code = path.slice(start_index + 6, end_index)
             console.log('code : ' + code);
+            console.log(typeof(code));
             axios.post({
                 method: 'post',
                 url: 'https://api.line.me/oauth2/v2.1/token',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                data: {
+                data: qs.stringify({
                     grant_type: 'authorization_code',
                     code: code,
                     redirect_uri: 'https://mlffts-web.herokuapp.com/',
                     client_id: '1653327020',
                     client_secret: '94d3f73ce54cb17235785bf81bdd802c'
-                }
+                })
             }).then( res => {
                 console.log(res)
                 this.setState({isChecked: true})
