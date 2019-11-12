@@ -63,7 +63,7 @@ class Index extends React.Component {
         if (this.state.isChecked && this.state.user) {
             return (
                 <div>
-                    <Navbar user={this.state.user} />
+                    <Navbar user={this.state.user}/>
                     <p className="title">Loading</p>
                 </div>
             );
