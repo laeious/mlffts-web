@@ -20,6 +20,7 @@ class Index extends React.Component {
         const end_index = path.indexOf('&');
         if (start_index !== -1) {
             const code = path.slice(start_index + 6, end_index)
+            console.log('code : ' + code);
             axios.post({
                 method: 'post',
                 url: 'https://api.line.me/oauth2/v2.1/token',
@@ -36,7 +37,11 @@ class Index extends React.Component {
             }).then( res => {
                 console.log(res)
                 this.setState({isChecked: true})
+            }).catch(err =>{
+                console.log(err)
             })
+        }else{
+            console.log('..')
         }
 
 
