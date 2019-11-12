@@ -11,7 +11,8 @@ class Index extends React.Component {
         super(props);
         this.state = {
             isChecked: false,
-            user: null
+            user: null,
+            firstTime: true
         }
     }
 
@@ -20,7 +21,7 @@ class Index extends React.Component {
         const path = window.location.href;
         const start_index = path.indexOf("?code=");
         const end_index = path.indexOf('&');
-        if (start_index !== -1) {
+        if (start_index !== -1 && this.state.firstTime) {
             const code = path.slice(start_index + 6, end_index)
             console.log('code : ' + code);
             console.log(typeof (code));
@@ -44,7 +45,7 @@ class Index extends React.Component {
 
                 const data = jwt(res.data.id_token);
                 console.log(data)
-                this.setState({ isChecked: true, user: data })
+                this.setState({ isChecked: true, user: data, firstTime: false})
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)

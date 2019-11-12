@@ -3,8 +3,13 @@ import React from 'react';
 function Navbar(props) {
     return (
         <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <p className="label">MLFFTS</p>
+                </div>
+            </nav>
 
+            <div class="navbar-menu">
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
@@ -17,11 +22,11 @@ function Navbar(props) {
                                 </figure>
                             </a>
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
         </nav>
-            )
+    )
 }
 
 export default Navbar;
