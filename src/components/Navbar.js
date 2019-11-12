@@ -9,11 +9,11 @@ function Navbar(props) {
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button is-primary">
-                                <strong>{props.name}</strong>
+                                <strong>{props.user.name}</strong>
                             </a>
                             <a class="button is-light">
                                 <figure class="image is-24x24">
-                                    <img class="is-rounded" src={props.picture} />
+                                    <img class="is-rounded" src={props.user.picture} />
                                 </figure>
                             </a>
                         </div>
