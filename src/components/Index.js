@@ -3,6 +3,7 @@ import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 import axios from 'axios';
 import qs from 'qs';
 import jwt from 'jwt-decode';
+import Navbar from './Navbar';
 
 class Index extends React.Component {
 
@@ -10,9 +11,7 @@ class Index extends React.Component {
         super(props);
         this.state = {
             isChecked: false,
-            isUser: false,
-            profilePic: null,
-            userName: null,
+            user: null
         }
     }
 
@@ -24,7 +23,7 @@ class Index extends React.Component {
         if (start_index !== -1) {
             const code = path.slice(start_index + 6, end_index)
             console.log('code : ' + code);
-            console.log(typeof(code));
+            console.log(typeof (code));
 
             const reqBody = {
                 grant_type: 'authorization_code',
@@ -36,21 +35,21 @@ class Index extends React.Component {
 
             const config = {
                 headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
-              }
-              
-            axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify(reqBody), config).then( res => {
+            }
+
+            axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify(reqBody), config).then(res => {
                 console.log(res)
-                
+
                 const data = jwt(res.data.id_token);
                 console.log(data)
-                this.setState({isChecked: true})
-            }).catch(err =>{
+                this.setState({ isChecked: true, user: data })
+            }).catch(err => {
                 console.log('error ja')
                 console.log(err)
             })
-        }else{
+        } else {
             console.log('..')
         }
 
@@ -61,10 +60,13 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
-        if(this.state.isChecked){
+        if (this.state.isChecked && this.state.user) {
             return (
-                <p className="title">Loading</p>
-            )
+                <div>
+                    <Navbar user={this.state.user} />
+                    <p className="title">Loading</p>
+                </div>
+            );
         }
 
         return (
