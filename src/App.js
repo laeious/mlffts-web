@@ -19,7 +19,7 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <section className="section">
+          <div className="container">
             <Route path="/register">
               <Form />
             </Route>
@@ -27,7 +27,7 @@ class App extends React.Component {
               {}
               <Index />
             </Route>
-          </section>
+          </div>
         </Switch>
       </Router>
     );

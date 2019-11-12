@@ -4,6 +4,7 @@ import axios from 'axios';
 import qs from 'qs';
 import jwt from 'jwt-decode';
 import Navbar from './Navbar';
+import Home from './Home';
 
 class Index extends React.Component {
 
@@ -45,7 +46,7 @@ class Index extends React.Component {
 
                 const data = jwt(res.data.id_token);
                 console.log(data)
-                this.setState({ isChecked: true, user: data, firstTime: false})
+                this.setState({ isChecked: true, user: data, firstTime: false })
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -61,57 +62,60 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
-        if (this.state.isChecked && this.state.user) {
+        if (true) {
             return (
                 <div>
-                    <Navbar user={this.state.user}/>
-                    <p className="title">Loading</p>
+                    {/* <Navbar user={this.state.user}/> */}
+                    <Home />
                 </div>
             );
         }
 
         return (
-            <div className="container">
-                <div className="columns is-centered">
-                    <div className="column is-7  is-10-tablet is-6-widescreen has-text-centered">
-                        <div className="container">
-                            <h1 className="title logo">MLFFTS</h1>
-                        </div>
-                        <div className="columns is-centered">
-                            <div className="column is-7 has-text-centered">
-                                <div className="field">
-                                    <p className="control">
-                                        <input className="input" type="email" placeholder="Username / Email" />
-                                    </p>
-                                </div>
-                                <div className="field">
-                                    <p className="control">
-                                        <input className="input" type="password" placeholder="Password" />
-                                    </p>
-                                </div>
-                                <button className="button is-primary is-fullwidth">Login</button>
-                                <div className="columns is-marginless">
-                                    <div className="column is-paddingless">
+            <div className="section">
 
-                                        <div className="move-right">
-                                            <button className="button is-text has-text-grey-dark link-btn">Sign Up</button>
-                                            <button className="button is-text has-text-grey-dark link-btn">Forget Password</button>
-                                        </div>
-
+                <div className="container">
+                    <div className="columns is-centered">
+                        <div className="column is-7  is-10-tablet is-6-widescreen has-text-centered">
+                            <div className="container">
+                                <h1 className="title logo">MLFFTS</h1>
+                            </div>
+                            <div className="columns is-centered">
+                                <div className="column is-7 has-text-centered">
+                                    <div className="field">
+                                        <p className="control">
+                                            <input className="input" type="email" placeholder="Username / Email" />
+                                        </p>
                                     </div>
-                                </div>
+                                    <div className="field">
+                                        <p className="control">
+                                            <input className="input" type="password" placeholder="Password" />
+                                        </p>
+                                    </div>
+                                    <button className="button is-primary is-fullwidth">Login</button>
+                                    <div className="columns is-marginless">
+                                        <div className="column is-paddingless">
 
-                                <div className="btw">
-                                    <span className="has-text-grey-light">OR</span>
-                                </div>
+                                            <div className="move-right">
+                                                <button className="button is-text has-text-grey-dark link-btn">Sign Up</button>
+                                                <button className="button is-text has-text-grey-dark link-btn">Forget Password</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="btw">
+                                        <span className="has-text-grey-light">OR</span>
+                                    </div>
 
 
-                                <a className="button line-btn is-fullwidth"
-                                    href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653327020&redirect_uri=https%3A%2F%2Fmlffts-web.herokuapp.com%2F&state=12345abcde&scope=openid%20email%20openid%20profile&nonce=09876xyz&fbclid=IwAR0VqDjgpsd4pcFGAqcD858ZiTyfE3hlgvptz3sMRaPDWVolguwpHpdgRCs"
-                                >
-                                    Log in with LINE
+                                    <a className="button line-btn is-fullwidth"
+                                        href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653327020&redirect_uri=https%3A%2F%2Fmlffts-web.herokuapp.com%2F&state=12345abcde&scope=openid%20email%20openid%20profile&nonce=09876xyz&fbclid=IwAR0VqDjgpsd4pcFGAqcD858ZiTyfE3hlgvptz3sMRaPDWVolguwpHpdgRCs"
+                                    >
+                                        Log in with LINE
                                     </a>
 
+                                </div>
                             </div>
                         </div>
                     </div>
