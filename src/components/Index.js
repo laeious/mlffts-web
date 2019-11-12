@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
+import { Switch, Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom'
 import axios from 'axios';
 import qs from 'qs';
 import jwt from 'jwt-decode';
@@ -67,6 +67,10 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
+        if(this.state.firstTime){
+            return <Redirect to='/'/>;
+        }
+
         if (this.state.isChecked && this.state.user) {
             return (
                 <div>
