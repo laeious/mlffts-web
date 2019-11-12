@@ -67,7 +67,7 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
-        if(this.state.firstTime){
+        if(!this.state.firstTime){
             return <Redirect to='/'/>;
         }
 
