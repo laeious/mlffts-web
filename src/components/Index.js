@@ -11,14 +11,14 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChecked: false,
-            user: null,
+            // isChecked: false,
+            // user: null,
             firstTime: true,
-            // user: {
-            //     name: 'L',
-            //     picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
-            // },
-            // isChecked: true,
+            user: {
+                name: 'L',
+                picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
+            },
+            isChecked: true,
         }
     }
 
@@ -93,35 +93,35 @@ class Index extends React.Component {
                                 <div className="column is-7 has-text-centered">
                                     <div className="field">
                                         <p className="control">
-                                            <input className="input" type="email" placeholder="Username / Email" />
+                                            <input className="input" type="email" placeholder="อีเมลล์" />
                                         </p>
                                     </div>
                                     <div className="field">
                                         <p className="control">
-                                            <input className="input" type="password" placeholder="Password" />
+                                            <input className="input" type="password" placeholder="รหัสผ่าน" />
                                         </p>
                                     </div>
-                                    <button className="button is-primary is-fullwidth">Login</button>
+                                    <button className="button is-primary is-fullwidth">เข้าสู่ระบบ</button>
                                     <div className="columns is-marginless">
                                         <div className="column is-paddingless">
 
                                             <div className="move-right">
-                                                <button className="button is-text has-text-grey-dark link-btn">Sign Up</button>
-                                                <button className="button is-text has-text-grey-dark link-btn">Forget Password</button>
+                                                <button className="button is-text has-text-grey-dark link-btn">สมัครสมาชิก</button>
+                                                <button className="button is-text has-text-grey-dark link-btn">ลืมรหัสผ่าน</button>
                                             </div>
 
                                         </div>
                                     </div>
 
                                     <div className="btw">
-                                        <span className="has-text-grey-light">OR</span>
+                                        <span className="has-text-grey-light">หรือ</span>
                                     </div>
 
 
                                     <a className="button line-btn is-fullwidth"
                                         href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653327020&redirect_uri=https%3A%2F%2Fmlffts-web.herokuapp.com%2F&state=12345abcde&scope=openid%20email%20openid%20profile&nonce=09876xyz&fbclid=IwAR0VqDjgpsd4pcFGAqcD858ZiTyfE3hlgvptz3sMRaPDWVolguwpHpdgRCs"
                                     >
-                                        Log in with LINE
+                                        เข้าสู่ระบบผ่าน LINE
                                     </a>
 
                                 </div>

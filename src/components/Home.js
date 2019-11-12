@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
+import Card from './Card';
 
 class Home extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <section class="hero">
+            <div className="section athiti">
+                {/* <section class="hero">
                     <div class="hero-body-l">
                         <div class="container">
                             <h1 class="title is-3">
@@ -16,7 +17,17 @@ class Home extends React.Component {
                             </h2>
                         </div>
                     </div>
-                </section>
+                </section> */}
+
+                <h1 class="title is-3">ประวัติค่าผ่านทางพิเศษ</h1>
+                <div className="columns is-centered">
+                    <div className="column is-10">
+                       <Card />
+                       <Card />
+                       <Card />
+                       <Card />
+                    </div>
+                </div>
             </div>
         )
     }

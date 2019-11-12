@@ -4,7 +4,11 @@ function Navbar(props) {
     return (
         <nav class="navbar  is-fixed-top" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                {/* <p className="label">MLFFTS</p> */}
+                <a class="navbar-item is-test">
+                    <h1 class="title is-4">
+                        MLFFTS
+                    </h1>
+                </a>
             </div>
             <div class="navbar-menu">
                 <div class="navbar-end">
