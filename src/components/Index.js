@@ -15,7 +15,7 @@ class Index extends React.Component {
 
 
     checkLogin() {
-        const path = window.location.pathname;
+        const path = window.location.href;
         const start_index = path.indexOf("?code=");
         const end_index = path.indexOf('&');
         if (start_index !== -1) {
@@ -44,7 +44,7 @@ class Index extends React.Component {
 
 
     render() {
-        console.log(window.location.pathname)
+        console.log(window.location.href)
         if(this.state.isChecked){
             return (
                 <p className="title">Loading</p>
