@@ -66,13 +66,12 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
-        if(!this.state.firstTime){
-            console.log('in first time :',this.state.firstTime)
-            return <Redirect to='/'/>;
-        }
+        // if(!this.state.firstTime){
+        //     console.log('in first time :',this.state.firstTime)
+        //     return <Redirect to='/'/>;
+        // }
 
         if (this.state.isChecked && this.state.user) {
-            console.log('second')
             return (
                 <div>
                     <Navbar user={this.state.user}/>
