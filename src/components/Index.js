@@ -24,20 +24,22 @@ class Index extends React.Component {
             const code = path.slice(start_index + 6, end_index)
             console.log('code : ' + code);
             console.log(typeof(code));
-            axios.post({
-                method: 'post',
-                url: 'https://api.line.me/oauth2/v2.1/token',
+
+            const reqBody = {
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: 'https://mlffts-web.herokuapp.com/',
+                client_id: '1653327020',
+                client_secret: '94d3f73ce54cb17235785bf81bdd802c'
+            }
+
+            const config = {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: qs.stringify({
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri: 'https://mlffts-web.herokuapp.com/',
-                    client_id: '1653327020',
-                    client_secret: '94d3f73ce54cb17235785bf81bdd802c'
-                })
-            }).then( res => {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                }
+              }
+              
+            axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify(reqBody), config).then( res => {
                 console.log(res)
                 this.setState({isChecked: true})
             }).catch(err =>{
