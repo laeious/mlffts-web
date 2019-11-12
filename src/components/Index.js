@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 import axios from 'axios';
 import qs from 'qs';
+import jwt from 'jwt-decode';
 
 class Index extends React.Component {
 
@@ -41,8 +42,12 @@ class Index extends React.Component {
               
             axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify(reqBody), config).then( res => {
                 console.log(res)
+                
+                const data = jwt(res.data.id_token);
+                console.log(data)
                 this.setState({isChecked: true})
             }).catch(err =>{
+                console.log('error ja')
                 console.log(err)
             })
         }else{
