@@ -24,7 +24,6 @@ class App extends React.Component {
               <Form />
             </Route>
             <Route path="/">
-              {}
               <Index />
             </Route>
           </div>

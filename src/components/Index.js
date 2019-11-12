@@ -13,7 +13,12 @@ class Index extends React.Component {
         this.state = {
             isChecked: false,
             user: null,
-            firstTime: true
+            firstTime: true,
+            // user: {
+            //     name: 'L',
+            //     picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
+            // },
+            // isChecked: true,
         }
     }
 
@@ -62,17 +67,17 @@ class Index extends React.Component {
     render() {
         console.log(window.location.href)
         this.checkLogin();
-        if (true) {
+        if (this.state.isChecked && this.state.user) {
             return (
                 <div>
-                    {/* <Navbar user={this.state.user}/> */}
+                    <Navbar user={this.state.user}/>
                     <Home />
                 </div>
             );
         }
 
         return (
-            <div className="section">
+            <div className="hero-body-l">
 
                 <div className="container">
                     <div className="columns is-centered">
