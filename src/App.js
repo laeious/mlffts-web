@@ -8,14 +8,16 @@ import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 function App() {
   return (
     <Router>
+      <Switch>
       <section className="section">
           <Route path="/register">
             <Form />
           </Route>
-          <Route path="/" exact>
+          <Route path="/">
            <Index />
           </Route>
       </section>
+      </Switch>
     </Router>
 
 
