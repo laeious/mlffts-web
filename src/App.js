@@ -15,8 +15,6 @@ class App extends React.Component {
 
 
   render() {
-    const path = window.location.pathname;
-    const auth = path === '/' ? false:true;
 
     return (
       <Router>
