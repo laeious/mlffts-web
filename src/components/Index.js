@@ -11,14 +11,14 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // isChecked: false,
-            // user: null,
+            isChecked: false,
+            user: null,
             firstTime: true,
-            user: {
-                name: 'L',
-                picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
-            },
-            isChecked: true,
+            // user: {
+            //     name: 'L',
+            //     picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
+            // },
+            // isChecked: true,
         }
     }
 
