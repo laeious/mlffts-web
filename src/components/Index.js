@@ -30,7 +30,6 @@ class Index extends React.Component {
         if (start_index !== -1 && this.state.firstTime) {
             const code = path.slice(start_index + 6, end_index)
             console.log('code : ' + code);
-            console.log(typeof (code));
 
             const reqBody = {
                 grant_type: 'authorization_code',
@@ -68,10 +67,12 @@ class Index extends React.Component {
         console.log(window.location.href)
         this.checkLogin();
         if(!this.state.firstTime){
+            console.log('in first time :',this.state.firstTime)
             return <Redirect to='/'/>;
         }
 
         if (this.state.isChecked && this.state.user) {
+            console.log('second')
             return (
                 <div>
                     <Navbar user={this.state.user}/>
