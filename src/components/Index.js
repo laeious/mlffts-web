@@ -35,7 +35,7 @@ class Index extends React.Component {
                 }
             }).then( res => {
                 console.log(res)
-                this.setState({isChecked: false})
+                this.setState({isChecked: true})
             })
         }
 
@@ -45,7 +45,7 @@ class Index extends React.Component {
 
     render() {
         console.log(window.location.pathname)
-        if(!this.state.isChecked){
+        if(this.state.isChecked){
             return (
                 <p className="title">Loading</p>
             )
