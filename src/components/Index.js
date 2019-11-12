@@ -50,6 +50,7 @@ class Index extends React.Component {
 
     render() {
         console.log(window.location.href)
+        this.checkLogin();
         if(this.state.isChecked){
             return (
                 <p className="title">Loading</p>
