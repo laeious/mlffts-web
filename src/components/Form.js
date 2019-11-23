@@ -22,41 +22,84 @@ class Form extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <div class="field">
-          <label class="label ">Name</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Text input" />
+      <div className="sectino">
+
+        <div className="contianer">
+          <div className="topic">
+            <h2 className="title is-1">Register</h2>
           </div>
-        </div>
-        <div class="field">
-          <label class="label ">Lastname</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Text input" />
-          </div>
-        </div>
-        <div class="field">
-          <label class="label ">Email</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Text input" />
-          </div>
-        </div>
-        <div class="field">
-          <label class="label ">Easy Pass</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Text input" />
-          </div>
-        </div>
-        <div class="field is-grouped is-pulled-right">
-          <div class="control">
-            <button class="button is-link">Submit</button>
-          </div>
-          <div class="control">
-            <button class="button is-link is-light">Cancel</button>
+
+          <div className="columns is-centered">
+            <div className="column  is-half is-11-moible is-10-tablet is-6-widescreen ">
+              <div className=" container">
+                <div class="field">
+                  <label class="label ">Username</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Password</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Confirm Password</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Name</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Lastname</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Email</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">License number</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">Province</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label ">E_code</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="" />
+                  </div>
+                </div>
+                <div class="field is-grouped is-pulled-right">
+                  <div class="control">
+                    <button class="button is-link">Submit</button>
+                  </div>
+                  <div class="control">
+                    <button class="button is-link is-light">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-
 
 
 

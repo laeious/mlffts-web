@@ -12,14 +12,12 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <div className="container">
             <Route path="/register">
               <Form />
             </Route>
             <Route path="/">
               <Index />
             </Route>
-          </div>
         </Switch>
       </Router>
     );

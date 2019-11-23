@@ -106,7 +106,7 @@ class Index extends React.Component {
                                         <div className="column is-paddingless">
 
                                             <div className="move-right">
-                                                <button className="button is-text has-text-grey-dark link-btn">สมัครสมาชิก</button>
+                                                <Link to="/register"><button className="button is-text has-text-grey-dark link-btn">สมัครสมาชิก</button></Link>
                                                 <button className="button is-text has-text-grey-dark link-btn">ลืมรหัสผ่าน</button>
                                             </div>
 

@@ -40,3 +40,10 @@
 .athiti {
   font-family: 'Athiti', sans-serif;
 }
+.container-form {
+  max-width: 800px;
+}
+.topic {
+  padding-left: 10%;
+  padding-bottom: 20px;
+}
