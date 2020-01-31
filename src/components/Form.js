@@ -32,66 +32,66 @@ class Form extends React.Component {
           <div className="columns is-centered">
             <div className="column  is-half is-11-moible is-10-tablet is-6-widescreen ">
               <div className=" container">
-                <div class="field">
-                  <label class="label ">Username</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Username</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Password</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Password</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Confirm Password</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Confirm Password</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Name</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Lastname</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Lastname</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Email</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Email</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">License number</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">License number</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">Province</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">Province</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field">
-                  <label class="label ">E_code</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" />
+                <div className="field">
+                  <label className="label ">E_code</label>
+                  <div className="control">
+                    <input className="input" type="text" placeholder="" />
                   </div>
                 </div>
-                <div class="field is-grouped is-pulled-right">
-                  <div class="control">
-                    <button class="button is-link">Submit</button>
+                <div className="field is-grouped is-pulled-right">
+                  <div className="control">
+                    <button className="button is-link">Submit</button>
                   </div>
-                  <div class="control">
-                    <button class="button is-link is-light">Cancel</button>
+                  <div className="control">
+                    <button className="button is-link is-light">Cancel</button>
                   </div>
                 </div>
               </div>

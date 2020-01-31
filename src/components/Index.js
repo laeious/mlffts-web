@@ -19,6 +19,8 @@ class Index extends React.Component {
             //     picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
             // },
             // isChecked: true,
+            email: null,
+            password: null
         }
     }
 
@@ -62,6 +64,14 @@ class Index extends React.Component {
 
     }
 
+    submit(e) {
+        e.preventDefault();
+        axios.post('/getToken' , {
+            email: this.state.email,
+            password: this.state.password
+        }).then(res => localStorage.setItem('mlffts-jwt', res.date));
+    }
+
 
     render() {
         console.log(window.location.href)
@@ -101,7 +111,7 @@ class Index extends React.Component {
                                             <input className="input" type="password" placeholder="รหัสผ่าน" />
                                         </p>
                                     </div>
-                                    <button className="button is-primary is-fullwidth">เข้าสู่ระบบ</button>
+                                    <Link to="/home"><button className="button is-primary is-fullwidth">เข้าสู่ระบบ</button></Link>
                                     <div className="columns is-marginless">
                                         <div className="column is-paddingless">
 

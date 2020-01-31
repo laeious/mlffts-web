@@ -47,3 +47,88 @@
   padding-left: 10%;
   padding-bottom: 20px;
 }
+.recipe-icon-box {
+  padding-right: 0;
+  padding-left: 0;
+}
+.recipe-icon {
+  max-width: 48px;
+  max-height: 48px;
+}
+.no-padding-btm {
+  padding-bottom: 0.5em;
+}
+.datepicker {
+  font-family: 'Athiti', sans-serif;
+  font-size: inherit;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #aeaeae;
+  border-radius: 0.3rem;
+  display: inline-block;
+  position: relative;
+  padding-left: 0.5rem;
+  max-width: 7em;
+  margin-left: 0.5rem;
+}
+.my-datepicker-container {
+  line-height: 2.5rem;
+  text-align: right;
+  display: inline-block;
+}
+.search-container {
+  position: fixed;
+}
+.entry-select {
+  font-family: 'Athiti', sans-serif;
+  font-size: inherit;
+  display: inline-block;
+  position: relative;
+  padding-left: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.select{
+  display: inline-block;
+  vertical-align: middle;
+  z-index: 0;
+}
+
+.entry-select-container {
+  line-height: 2.5rem;
+  text-align: right;
+  display: inline-block;
+ 
+}
+
+.search-button {
+  margin-top: 1.5rem;
+  background-color: #F16750;
+  color: #FFFFFF;
+  display: inline-block;
+}
+
+.card-container {
+  max-width: 750px;
+}
+
+
+/* #style-2::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#style-2::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #D62929;
+} */

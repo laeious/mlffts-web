@@ -2,24 +2,24 @@ import React from 'react';
 
 function Navbar(props) {
     return (
-        <nav class="navbar  is-fixed-top" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item is-test">
-                    <h1 class="title is-4">
+        <nav className="navbar  is-fixed-top" role="navigation" aria-label="main navigation">
+            <div className="navbar-brand">
+                <a className="navbar-item is-test">
+                    <h1 className="title is-4">
                         MLFFTS
                     </h1>
                 </a>
             </div>
-            <div class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="navbar-item is-test">
+            <div className="navbar-menu">
+                <div className="navbar-end">
+                    <div className="navbar-item">
+                        <div className="buttons">
+                            <a className="navbar-item is-test">
                                 <strong>{props.user.name}</strong>
                             </a>
-                            <a class="navbar-item">
-                                <figure class="image is-24x24">
-                                    <img class="is-rounded" src={props.user.picture} />
+                            <a className="navbar-item">
+                                <figure className="image is-24x24">
+                                    <img className="is-rounded" src={props.user.picture} />
                                 </figure>
                             </a>
                         </div>
