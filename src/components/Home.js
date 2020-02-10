@@ -21,18 +21,18 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        const token = getToken();
-        if(!token){
-            this.props.history.push('/login');
-        }
+        // const token = getToken();
+        // if(!token){
+        //     this.props.history.push('/login');
+        // }
 
-        axios.get('/getUser', {
-            headers: {Authorization: `Bearer ${token}` }
-        }).then( res=> this.setState({
-            user: res.data
-        })).catch( err => {
-            this.props.history.push('/login')
-        })
+        // axios.get('/getUser', {
+        //     headers: {Authorization: `Bearer ${token}` }
+        // }).then( res=> this.setState({
+        //     user: res.data
+        // })).catch( err => {
+        //     this.props.history.push('/login')
+        // })
 
     }
 

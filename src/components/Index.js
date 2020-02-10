@@ -66,7 +66,7 @@ class Index extends React.Component {
 
     submit(e) {
         e.preventDefault();
-        axios.post('/getToken' , {
+        axios.post('https://mlff-ts.herokuapp.com/login' , {
             email: this.state.email,
             password: this.state.password
         }).then(res => localStorage.setItem('mlffts-jwt', res.date));

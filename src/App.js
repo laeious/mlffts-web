@@ -1,7 +1,7 @@
 import React from 'react';
 import './bulma.css';
 import './App.css';
-import Form from './components/Form';
+import Register from './components/Register';
 import Index from './components/Index';
 import Home from './components/Home';
 import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
@@ -14,7 +14,7 @@ class App extends React.Component {
       <Router>
         <Switch>
             <Route path="/register">
-              <Form />
+              <Register />
             </Route>
             <Route path="/home">
               <Home />
