@@ -1,4 +1,6 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
+import qs from 'qs';
 
 class Register extends React.Component {
   constructor(props) {
@@ -10,11 +12,26 @@ class Register extends React.Component {
         comfirmPassword: '',
         name: '',
         lastName: '',
+        citizen_id: '',
         email: '',
         license: '',
         province: '',
         e_code: '',
       },
+      errors: {
+        username: '',
+        password: '',
+        comfirmPassword: '',
+        name: '',
+        lastName: '',
+        citizen_id: '',
+        email: '',
+        license: '',
+        province: '',
+        e_code: ''
+      },
+      checkNull: true,
+      checkErrors: false,
       isLoading: false,
       emailInvalid: false,
       passwordInvalid: false,
@@ -25,56 +42,94 @@ class Register extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   handleChange(e) {
-    if (e.target.name === 'email') {
-      this.setState({
-        emailInvalid: false,
-        duplicateEmail: false
-      })
-    } else if (e.target.name === 'password') {
-      this.setState({
-        passwordInvalid: false
-      })
-    } else if (e.target.name === 'license') {
-      this.setState({
-        duplicateLicense: false
-      })
-    }
+    e.preventDefault();
+    const { name, value } = e.target;
+    let errors = this.state.errors;
     let userForm = this.state.userForm;
-    if (e.target.name === 'username') {
-      userForm.username = e.target.value
-      console.log(this.validateUser(e.target.value))
-    } else if (e.target.name === 'password') {
-      userForm.password = e.target.value
-    } else if (e.target.name === 'comfirmPassword') {
-      userForm.comfirmPassword = e.target.value
-    } else if (e.target.name === 'name') {
-      userForm.name = e.target.value
-    } else if (e.target.name === 'lastName') {
-      userForm.lastName = e.target.value
-    } else if (e.target.name === 'email') {
-      userForm.email = e.target.value
-      console.log(this.validateEmail(e.target.value))
-    } else if (e.target.name === 'license') {
-      userForm.license = e.target.value
-    } else if (e.target.name === 'province') {
-      userForm.province = e.target.value
-    } else if (e.target.name === 'e_code') {
-      userForm.e_code = e.target.value
+
+    if (name === 'username') {
+      userForm.username = value;
+      errors.username = (value.length < 4 || !this.validateUser(value)) ? 'Username must be atleast 5 characters long' : '';
+    } else if (name === 'password') {
+      userForm.password = value
+      errors.password = (value.length < 2 || !this.validatePassword(value)) ? 'Password must be atleast 2 characters long' : '';
+    } else if (name === 'comfirmPassword') {
+      userForm.comfirmPassword = value
+      errors.comfirmPassword = (userForm.password !== value) ? 'Password and confirmation password do not match' : '';
+    } else if (name === 'name') {
+      userForm.name = value
+      errors.name = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
+    } else if (name === 'lastName') {
+      userForm.lastName = value
+      errors.lastName = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
+    } else if (name === 'citizen_id') {
+      userForm.citizen_id = value
+      errors.citizen_id = !this.validateCitizenID(value) ? 'Number 13 digits' : '';
+    } else if (name === 'email') {
+      userForm.email = value
+      errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
+    } else if (name === 'license') {
+      userForm.license = value
+    } else if (name === 'province') {
+      userForm.province = value
+    } else if (name === 'e_code') {
+      userForm.e_code = value
     }
-    this.setState({
-      userForm: userForm
-    })
-    // console.log(e.target.name);
-    console.log(e.target.value)
+
+    let checkNull = false;
+    for (let i in userForm) {
+      console.log(i)
+      if (userForm[i] === '') {
+        checkNull = true;
+      }
+    }
+
+    let checkErrors = false;
+    for (let i in errors) {
+      if (errors[i].length > 0) {
+        checkErrors = true;
+      }
+    }
+
+    console.log(checkNull)
+    this.setState({ userForm, errors, checkNull, checkErrors })
   }
 
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
+  submit(event) {
     event.preventDefault();
+    const userForm = this.state.userForm;
+    const reqBody = {
+      username: userForm.username,
+      password: userForm.password,
+      firstname: userForm.name,
+      lastName: userForm.lastName,
+      citizen_id: userForm.citizen_id,
+      email: userForm.email,
+      license: userForm.license,
+      province: userForm.province,
+      e_code: userForm.e_code,
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+
+    console.log('in submit');
+
+    axios.post('https://mlffts-api.herokuapp.com/register', qs.stringify(reqBody), config).then(
+      res => {
+        this.setState({isLoading: false})
+      }).catch(err => {
+        console.log('error ja')
+        console.log(err)
+      })
+
   }
 
   validatePassword = (pass) => {
@@ -87,8 +142,13 @@ class Register extends React.Component {
     return re.test(String(user));
   }
 
+  validateCitizenID = (user) => {
+    let re = /^[0-9]*$/;
+    return re.test(String(user));
+  }
+
   validateName = (name) => {
-    let re = /^[A-Za-z0-9_]*$/;
+    let re = /^[A-Za-z_]*$/;
     let reth = /^[ก-๏\s]+$/;
     return re.test(String(name)) || reth.test(String(name));
   }
@@ -98,7 +158,9 @@ class Register extends React.Component {
     return re.test(String(email).toLowerCase());
   }
 
+
   render() {
+    let errors = this.state.errors;
     return (
       <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
         <div className="contianer">
@@ -110,10 +172,10 @@ class Register extends React.Component {
             <div className="column  is-half is-12-moible is-10-tablet is-6-widescreen ">
               <div className="register box">
                 <div className=" container">
-                  
+
                   <h3 className="title is-2 has-text-centered">Register</h3>
 
-                  <hr/>
+                  <hr />
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
                       <label className=" ">Username</label>
@@ -127,6 +189,7 @@ class Register extends React.Component {
                             onChange={this.handleChange}
                             value={this.state.userForm.username} />
                         </div>
+                        {errors.username.length > 0 && <span className='error'>{errors.username}</span>}
                       </div>
                     </div>
                   </div>
@@ -143,6 +206,7 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.password} />
+                          {errors.password.length > 0 && <span className='error'>{errors.password}</span>}
                         </div>
                       </div>
                     </div>
@@ -160,6 +224,8 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.comfirmPassword} />
+                          {errors.comfirmPassword.length > 0 && <span className='error'>{errors.comfirmPassword}</span>}
+
                         </div>
                       </div>
                     </div>
@@ -177,6 +243,7 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.name} />
+                          {errors.name.length > 0 && <span className='error'>{errors.name}</span>}
                         </div>
                       </div>
                     </div>
@@ -194,6 +261,25 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.lastName} />
+                          {errors.lastName.length > 0 && <span className='error'>{errors.lastName}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className=" ">Citizen ID</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <div className="control">
+                          <input className="input" type="text" placeholder=""
+                            name="citizen_id"
+                            placeholder=""
+                            onChange={this.handleChange}
+                            value={this.state.userForm.citizen_id} />
+                          {errors.citizen_id.length > 0 && <span className='error'>{errors.citizen_id}</span>}
                         </div>
                       </div>
                     </div>
@@ -211,6 +297,7 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.email} />
+                          {errors.email.length > 0 && <span className='error'>{errors.email}</span>}
                         </div>
                       </div>
                     </div>
@@ -228,6 +315,7 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.e_code} />
+                          {errors.e_code.length > 0 && <span className='error'>{errors.e_code}</span>}
                         </div>
                       </div>
                     </div>
@@ -245,6 +333,7 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.license} />
+                          {errors.license.length > 0 && <span className='error'>{errors.license}</span>}
                         </div>
                       </div>
                     </div>
@@ -262,24 +351,25 @@ class Register extends React.Component {
                             placeholder=""
                             onChange={this.handleChange}
                             value={this.state.userForm.province} />
+                          {errors.province.length > 0 && <span className='error'>{errors.province}</span>}
                         </div>
                       </div>
                     </div>
                   </div>
 
-              
+
                   <button className="button centered">
                     Add more car
                   </button>
-          
-
-                
 
 
 
-                  <div class="field is-grouped is-grouped-right" style={{marginTop:"2em"}}>
+
+
+
+                  <div class="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                     <p class="control">
-                      <button class="button is-primary">
+                      <button class="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
                         Submit
                     </button>
                     </p>

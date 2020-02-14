@@ -1,12 +1,12 @@
 import React from 'react';
-import { Switch, Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom'
+import { Switch, Route, Link, BrowserRouter as Router, withRouter } from 'react-router-dom'
 import axios from 'axios';
 import qs from 'qs';
 import jwt from 'jwt-decode';
 import Navbar from './Navbar';
 import Home from './Home';
 
-class Index extends React.Component {
+class Login extends React.Component {
 
     constructor(props) {
         super(props);
@@ -88,8 +88,9 @@ class Index extends React.Component {
 
             axios.post('https://mlffts-api.herokuapp.com/login', qs.stringify(reqBody), config).then(
                 res => {
-                    console.log(res);
-                    // localStorage.setItem('mlffts-jwt', res.data)
+                    console.log(res.data.token);
+                    localStorage.setItem('mlffts-jwt', res.data.token);
+                    this.props.history.push('/');
 
                 }).catch(err => {
                     console.log('error ja')
@@ -175,4 +176,4 @@ class Index extends React.Component {
     }
 }
 
-export default Index;
+export default withRouter(Login);
