@@ -1,6 +1,6 @@
 import React from 'react'
 
-class Register extends React.Component {
+class RegisModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,7 +100,9 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
+    //   <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
+    <div class="modal is-active">
+  <div class="modal-background"></div>
         <div className="contianer">
           {/* <div className="topic">
             <h2 className="title is-1">Register</h2>
@@ -216,23 +218,6 @@ class Register extends React.Component {
                     </div>
                   </div>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">E_code</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="e_code"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.e_code} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="field is-horizontal long-label">
                     <div className="field-label is-normal">
                       <label className=" ">License number</label>
@@ -267,17 +252,26 @@ class Register extends React.Component {
                     </div>
                   </div>
 
-              
-                  <button className="button centered">
-                    Add more car
-                  </button>
-          
+                  <div className="field is-horizontal">
+                    <div className="field-label is-normal">
+                      <label className=" ">E_code</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field">
+                        <div className="control">
+                          <input className="input" type="text" placeholder=""
+                            name="e_code"
+                            placeholder=""
+                            onChange={this.handleChange}
+                            value={this.state.userForm.e_code} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                
 
 
-
-                  <div class="field is-grouped is-grouped-right" style={{marginTop:"2em"}}>
+                  <div class="field is-grouped is-grouped-right">
                     <p class="control">
                       <button class="button is-primary">
                         Submit
@@ -306,4 +300,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default RegisModal;

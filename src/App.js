@@ -5,25 +5,31 @@ import Register from './components/Register';
 import Index from './components/Index';
 import Home from './components/Home';
 import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
+import Navbar from './components/Navbar';
 
 class App extends React.Component {
 
   render() {
 
     return (
-      <Router>
-        <Switch>
+      <div>
+
+        <Router>
+          <Switch>
             <Route path="/register">
+              <Navbar />
               <Register />
             </Route>
             <Route path="/home">
+              <Navbar />
               <Home />
             </Route>
             <Route path="/">
               <Index />
             </Route>
-        </Switch>
-      </Router>
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }

@@ -1,6 +1,12 @@
+.logo-nav {
+  font-family: 'Saira Extra Condensed', sans-serif;
+  color: white;
+}
 .logo {
-  font-size: 4em;
-  margin-bottom: 30px;
+  font-family: 'Saira Extra Condensed', sans-serif;
+  color: black;
+  font-size: 5rem;
+  margin-bottom: 1rem;
 }
 .test {
   border: 1px solid black;
@@ -112,7 +118,28 @@
   max-width: 750px;
 }
 
+.label {
+  font-family: 'Athiti', sans-serif;
+}
 
+@media screen and (min-width: 769px), print {
+   .field-label {
+    flex-grow: 2; /* overwrites previous value of 1 */
+  }
+}
+
+.gray-bg {
+  background-color: #f8f8f9;
+}
+
+button, span {
+  font-family: 'Athiti', sans-serif;
+}
+
+.button.centered {
+  display: table;
+  margin: 0 auto;
+}
 /* #style-2::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);

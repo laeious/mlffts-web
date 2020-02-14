@@ -70,7 +70,7 @@ class Home extends React.Component {
                     <div className="column is-3 is-hidden-desktop">
                         <h1 className="title is-4 is-size-3-widescreen home-title ">ประวัติค่าผ่านทางพิเศษ</h1>
 
-                        <button>ค้นหา</button>
+                        {/* <button>ค้นหา</button> */}
                     </div>
 
                     <div className="column is-3 is-hidden-touch">
