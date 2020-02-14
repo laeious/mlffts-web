@@ -5,7 +5,6 @@ import qs from 'qs';
 import jwt from 'jwt-decode';
 import Navbar from './Navbar';
 import Home from './Home';
-import RegisModal from './RegisModal';
 
 class Index extends React.Component {
 

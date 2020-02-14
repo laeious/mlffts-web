@@ -8,13 +8,13 @@ function Navbar(props) {
         return (
             <nav className="navbar  is-fixed-top" role="navigation" aria-label="main navigation">
                 <div className="navbar-brand">
-                    <a className="navbar-item is-test">
                     <Link to="/">
-                        <h1 className="title logo-nav">
-                            MLFFTS
+                        <a className="navbar-item is-test">
+                            <h1 className="title logo-nav">
+                                MLFFTS
                         </h1>
+                        </a>
                     </Link>
-                    </a>
                 </div>
                 <div className="navbar-menu">
                     <div className="navbar-end">
@@ -38,13 +38,13 @@ function Navbar(props) {
     return (
         <nav className="navbar  is-fixed-top is-primary" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
-                <a className="navbar-item is-test">
-                    <Link to="/">
+                <Link to="/">
+                    <a className="navbar-item is-test">
                         <h1 className="title is-4 logo-nav">
                             MLFFTS
                         </h1>
-                    </Link>
-                </a>
+                    </a>
+                </Link>
             </div>
             <div className="navbar-menu">
                 <div className="navbar-end">
