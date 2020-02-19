@@ -99,6 +99,13 @@ class Login extends React.Component {
         }
     }
 
+    test = () => {
+        axios.get('https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653327020&redirect_uri=https://mlffts-web.herokuapp.com/cb-line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz').then(
+            res => {
+                console.log(res);
+            }
+        )
+    }
 
     render() {
         console.log(window.location.href)
@@ -160,9 +167,12 @@ class Login extends React.Component {
 
 
                                         <button className="button line-btn is-fullwidth"
-                                            onClick={this.registerModal}
-                                        >
+                                         onClick={this.test}>
+                                         {/* <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653327020&redirect_uri=https://mlffts-api.herokuapp.com/cb-line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
                                             เข้าสู่ระบบผ่าน LINE
+                                         </a> */}
+                                         เข้าสู่ระบบผ่าน LINE
+
                                     </button>
 
                                     </div>
