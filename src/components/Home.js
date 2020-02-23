@@ -29,21 +29,15 @@ class Home extends React.Component {
         if (!token) {
             this.props.history.push('/login');
         } else {
-            let user = {
-                name: 'L',
-                picture: "https://profile.line-scdn.net/0hu3Y5-57bKhxkTAH5A2pVS1gJJHETYixUHH5hfhZMfH8bfD9LCi1jKkBEc3gee2lPUCtiLUZOcCpA"
-            };
-            this.setState({ user: user });
+            axios.get('https://mlffts-api.herokuapp.com/profile', {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => this.setState({user:res.data})
+            ).catch(err => {
+                console.log(err)
+            })
         }
 
 
-        // axios.get('/getUser', {
-        //     headers: {Authorization: `Bearer ${token}` }
-        // }).then( res=> this.setState({
-        //     user: res.data
-        // })).catch( err => {
-        //     this.props.history.push('/login')
-        // })
 
     }
 
@@ -72,7 +66,7 @@ class Home extends React.Component {
         }
         return (
             <div>
-                <Navbar />
+                <Navbar user={this.state.user}/>
 
                 <div className="section-home athiti">
                     {/* <section className="hero">
@@ -94,7 +88,7 @@ class Home extends React.Component {
                             <h1 className="title is-4 is-size-3-widescreen home-title">ประวัติค่าผ่านทางพิเศษ</h1>
                             <button className="button is-fullwidth search-btn-mobile" onClick={this.toggleSearch}>ค้นหา</button>
 
-                            <div  className={this.state.searhActive ? "search-container-touch active" : "search-container-touch"}>
+                            <div className={this.state.searhActive ? "search-container-touch active" : "search-container-touch"}>
                                 <div className="has-text-centered ">
                                     <div className="my-datepicker-container">
                                         ตั้งแต่:

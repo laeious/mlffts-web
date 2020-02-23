@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import qs from 'qs';
+import Navbar from './Navbar';
 
 class Register extends React.Component {
   constructor(props) {
@@ -162,6 +163,9 @@ class Register extends React.Component {
   render() {
     let errors = this.state.errors;
     return (
+      <div>
+        <Navbar/>
+
       <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
         <div className="contianer">
           {/* <div className="topic">
@@ -388,7 +392,7 @@ class Register extends React.Component {
           </div>
         </div>
       </div>
-
+      </div>
 
 
 
