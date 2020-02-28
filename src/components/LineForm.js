@@ -1,10 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import Navbar from './Navbar';
 import {Link} from 'react-router-dom';
 
-class Register extends React.Component {
+class LineForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,17 +51,8 @@ class Register extends React.Component {
     const { name, value } = e.target;
     let errors = this.state.errors;
     let userForm = this.state.userForm;
-
-    if (name === 'username') {
-      userForm.username = value;
-      errors.username = (value.length < 4 || !this.validateUser(value)) ? 'Username must be atleast 5 characters long' : '';
-    } else if (name === 'password') {
-      userForm.password = value
-      errors.password = (value.length < 2 || !this.validatePassword(value)) ? 'Password must be atleast 2 characters long' : '';
-    } else if (name === 'comfirmPassword') {
-      userForm.comfirmPassword = value
-      errors.comfirmPassword = (userForm.password !== value) ? 'Password and confirmation password do not match' : '';
-    } else if (name === 'name') {
+    
+    if (name === 'name') {
       userForm.name = value
       errors.name = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
     } else if (name === 'lastName') {
@@ -105,8 +95,6 @@ class Register extends React.Component {
     event.preventDefault();
     const userForm = this.state.userForm;
     const reqBody = {
-      username: userForm.username,
-      password: userForm.password,
       firstname: userForm.name,
       lastName: userForm.lastName,
       citizen_id: userForm.citizen_id,
@@ -132,16 +120,6 @@ class Register extends React.Component {
         console.log(err)
       })
 
-  }
-
-  validatePassword = (pass) => {
-    let re = /^[A-Za-z0-9_<>()\[\]\\.,;:\s@"]*$/;
-    return re.test(String(pass));
-  }
-
-  validateUser = (user) => {
-    let re = /^[A-Za-z0-9_]*$/;
-    return re.test(String(user));
   }
 
   validateCitizenID = (user) => {
@@ -175,7 +153,7 @@ class Register extends React.Component {
                         </div>
                     </Link>
                 </div>
-            <div className="navbar-menu">
+            {/* <div className="navbar-menu">
                 <div className="navbar-end">
                     <div className="navbar-item">
                         <div className="buttons">
@@ -188,7 +166,7 @@ class Register extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </nav>
 
       <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
@@ -202,63 +180,9 @@ class Register extends React.Component {
               <div className="register box">
                 <div className=" container">
 
-                  <h3 className="title is-2 has-text-centered">Register</h3>
+                  <h3 className="title is-2 has-text-centered">Please fill the form</h3>
 
                   <hr />
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Username</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text"
-                            name="username"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.username} />
-                        </div>
-                        {errors.username.length > 0 && <span className='error'>{errors.username}</span>}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Password</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="password"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.password} />
-                          {errors.password.length > 0 && <span className='error'>{errors.password}</span>}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Confirm Password</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="comfirmPassword"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.comfirmPassword} />
-                          {errors.comfirmPassword.length > 0 && <span className='error'>{errors.comfirmPassword}</span>}
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
@@ -316,24 +240,6 @@ class Register extends React.Component {
 
                   <div className="field is-horizontal">
                     <div className="field-label is-normal">
-                      <label className=" ">Email</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="email"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.email} />
-                          {errors.email.length > 0 && <span className='error'>{errors.email}</span>}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
                       <label className=" ">E_code</label>
                     </div>
                     <div className="field-body">
@@ -349,52 +255,6 @@ class Register extends React.Component {
                       </div>
                     </div>
                   </div>
-
-                  <div className="field is-horizontal long-label">
-                    <div className="field-label is-normal">
-                      <label className=" ">License number</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="license"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.license} />
-                          {errors.license.length > 0 && <span className='error'>{errors.license}</span>}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Province</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="province"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.province} />
-                          {errors.province.length > 0 && <span className='error'>{errors.province}</span>}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <button className="button centered">
-                    Add more car
-                  </button>
-
-
-
-
-
 
                   <div class="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                     <p class="control">
@@ -425,4 +285,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default LineForm

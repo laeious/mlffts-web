@@ -7,7 +7,8 @@ import th from 'date-fns/locale/th';
 import getToken from '../helpers/getToken';
 import axios from 'axios';
 import Navbar from './Navbar';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import Spinner from 'react-spinkit';
 
 registerLocale('th', th)
 
@@ -19,7 +20,8 @@ class Home extends React.Component {
             user: undefined,
             startDate: null,
             endDate: null,
-            searhActive: false
+            searhActive: false,
+            isError: false
         }
     }
 
@@ -31,9 +33,12 @@ class Home extends React.Component {
         } else {
             axios.get('https://mlffts-api.herokuapp.com/profile', {
                 headers: { Authorization: `Bearer ${token}` }
-            }).then(res => this.setState({user:res.data})
+            }).then(res => this.setState({user:res.data, isError:false})
             ).catch(err => {
-                console.log(err)
+                alert(err);
+                console.log(err);
+                localStorage.removeItem('mlffts-jwt');
+                this.setState({user:undefined, isError: true})
             })
         }
 
@@ -59,14 +64,36 @@ class Home extends React.Component {
 
 
     render() {
-        if (this.state.user === undefined) {
+        if (this.state.user === undefined && this.state.isError) {
             return (
-                <div><h1>Loading...</h1></div>
+                <div className="loading-box">
+                    <Spinner name="ball-pulse-sync" fadeIn='quarter' /> 
+                </div>
             )
         }
+        
         return (
             <div>
-                <Navbar user={this.state.user}/>
+                <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
+                <div className="navbar-brand">
+                    <Link to="/">
+                        <div className="navbar-item">
+                            <h1 className="title logo-nav"  onClick={() => window.location.reload()}>
+                                MLFFTS
+                        </h1>
+                        </div>
+                    </Link>
+                </div>
+                <div className="navbar-menu">
+                    <div className="navbar-end">
+                        <div className="navbar-item">
+                                <a className="is-link has-text-white">
+                                    <b>{this.state.user ?  this.state.user.firstname :null}</b>
+                                </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
                 <div className="section-home athiti">
                     {/* <section className="hero">

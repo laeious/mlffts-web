@@ -5,6 +5,7 @@ import qs from 'qs';
 import jwt from 'jwt-decode';
 import Navbar from './Navbar';
 import Home from './Home';
+import Spinner from 'react-spinkit'
 
 class Login extends React.Component {
 
@@ -21,9 +22,12 @@ class Login extends React.Component {
             // isChecked: true,
             username: '',
             password: '',
+            isError: false,
+            isLoading: false
         }
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.submit = this.submit.bind(this);
     }
 
@@ -65,14 +69,19 @@ class Login extends React.Component {
     // }
 
 
+    handleKeyPress(e) {
+        if (e.key === "Enter") {
+            this.submit()
+        }
+    }
+
+
     handleChange(e) {
         this.setState({ [e.target.name]: e.target.value })
     }
 
-    submit(e) {
-        e.preventDefault();
-        console.log(this.state.username);
-        console.log(this.state.password);
+    submit() {
+        this.setState({ isLoading: true });
         if (this.state.username !== '' && this.state.password !== '') {
             const reqBody = {
                 username: this.state.username,
@@ -85,16 +94,22 @@ class Login extends React.Component {
                 }
             }
 
-
+            console.log(reqBody);
             axios.post('https://mlffts-api.herokuapp.com/login', qs.stringify(reqBody), config).then(
                 res => {
+                    console.log('res')
+                    console.log(res);
                     console.log(res.data.token);
                     localStorage.setItem('mlffts-jwt', res.data.token);
                     this.props.history.push('/');
 
                 }).catch(err => {
-                    console.log('error ja')
-                    console.log(err)
+                    if (err.response) {
+                        console.log(err.response.data);
+                        console.log(err.response.status);
+                        console.log(err.response.headers);
+                        this.setState({ isLoading: false, isError: err.response.data })
+                    }
                 })
         }
     }
@@ -103,7 +118,6 @@ class Login extends React.Component {
 
     render() {
         console.log(window.location.href)
-
         // if (this.state.isChecked && this.state.user) {
         //     return (
         //         <div>
@@ -115,6 +129,7 @@ class Login extends React.Component {
 
         return (
             <div className="section" style={{ padding: "1rem 1.5rem" }}>
+                <Navbar/>
                 <div className="hero-body-l">
 
                     <div className="container">
@@ -125,6 +140,7 @@ class Login extends React.Component {
                                 </div>
                                 <div className="columns is-centered">
                                     <div className="column is-7 has-text-centered">
+                                        {this.state.isError.length > 0 && <span className='error-big'>{this.state.isError}</span>}
                                         <div className="field">
                                             <p className="control">
                                                 <input className="input" type="username" name="username"
@@ -140,10 +156,12 @@ class Login extends React.Component {
                                                     placeholder="password"
                                                     value={this.state.password}
                                                     onChange={this.handleChange}
+                                                    onKeyPress={this.handleKeyPress}
                                                 />
                                             </p>
                                         </div>
-                                        <Link to="/home"><button className="button is-primary is-fullwidth" onClick={this.submit}>เข้าสู่ระบบ</button></Link>
+
+                                        <Link to="/"><button className={`button is-primary is-fullwidth ${this.state.isLoading ? 'is-loading' : null}`} onClick={this.submit}>เข้าสู่ระบบ</button></Link>
                                         <div className="columns is-marginless">
                                             <div className="column is-paddingless">
 
@@ -160,11 +178,11 @@ class Login extends React.Component {
                                         </div>
 
 
-                                         <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
-                                        <button className="button line-btn is-fullwidth">
-                                            เข้าสู่ระบบผ่าน LINE
+                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
+                                            <button className="button line-btn is-fullwidth">
+                                                เข้าสู่ระบบผ่าน LINE
                                     </button>
-                                         </a>
+                                        </a>
 
                                     </div>
                                 </div>

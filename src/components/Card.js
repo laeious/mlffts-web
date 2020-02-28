@@ -8,11 +8,11 @@ function Card(props) {
                     <div className="columns is-mobile ">
                         <div className="column is-10 no-padding-btm">
                             <div className="columns is-hidden-touch">
-                                <div className="column is-7">
+                                <div className="column is-6">
                                     <p>ด่านทางเข้า : <b>KBT1_N2</b> </p>
                                     <p>ด่านทางออก : <b>KBW2_X1</b></p>
                                 </div>
-                                <div className="column is-5">
+                                <div className="column is-6 no-padding-left">
                                     <p>ราคา : <b>40</b> บาท</p>
                                     <p>เวลา : <b>28/10/2017  13:39:58</b></p>
                                 </div>
