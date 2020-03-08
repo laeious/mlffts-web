@@ -192,8 +192,8 @@ class Login extends React.Component {
                                         </div>
 
 
-                                        {/* <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz"> */}
-                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=http://localhost:8080/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
+                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
+                                        {/* <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=http://localhost:8080/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz"> */}
                                             <button className="button line-btn is-fullwidth">
                                                 เข้าสู่ระบบผ่าน LINE
                                     </button>
