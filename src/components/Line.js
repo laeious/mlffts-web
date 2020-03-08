@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import qs from 'qs';
 import jwt from 'jwt-decode';
+import LineForm from './LineForm';
 
 class Line extends React.Component {
 
@@ -30,7 +31,8 @@ class Line extends React.Component {
             const reqBody = {
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: 'https://mlffts-web.herokuapp.com/line',
+                // redirect_uri: 'https://mlffts-web.herokuapp.com/line',
+                redirect_uri: 'http://localhost:8080/line',
                 client_id: '1653371073',
                 client_secret: '7126b5e12a628a6b38089fa4918cdbd2'
             }
@@ -42,7 +44,7 @@ class Line extends React.Component {
             }
 
             axios.post('https://api.line.me/oauth2/v2.1/token', qs.stringify(reqBody), config).then(res => {
-                console.log(res)
+                console.log(res.data)
 
                 const data = jwt(res.data.id_token);
                 console.log(data)
@@ -50,6 +52,7 @@ class Line extends React.Component {
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
+                this.props.history.push('/');
             })
         } else {
             console.log('..')
@@ -65,7 +68,7 @@ class Line extends React.Component {
 
         return (
             <div>
-                HELLO
+                <LineForm />
             </div>
         )
     }

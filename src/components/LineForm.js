@@ -64,10 +64,6 @@ class LineForm extends React.Component {
     } else if (name === 'email') {
       userForm.email = value
       errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-    } else if (name === 'license') {
-      userForm.license = value
-    } else if (name === 'province') {
-      userForm.province = value
     } else if (name === 'e_code') {
       userForm.e_code = value
     }
@@ -99,8 +95,6 @@ class LineForm extends React.Component {
       lastName: userForm.lastName,
       citizen_id: userForm.citizen_id,
       email: userForm.email,
-      license: userForm.license,
-      province: userForm.province,
       e_code: userForm.e_code,
     }
 
@@ -142,7 +136,7 @@ class LineForm extends React.Component {
   render() {
     let errors = this.state.errors;
     return (
-      <div>
+      <div className="navbar-space">
          <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
            <div className="navbar-brand">
                     <Link to="/">
@@ -169,7 +163,7 @@ class LineForm extends React.Component {
             </div> */}
         </nav>
 
-      <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
+      <div className="section" style={{ padding: "1rem 1.5rem" }}>
         <div className="contianer">
           {/* <div className="topic">
             <h2 className="title is-1">Register</h2>
@@ -256,14 +250,14 @@ class LineForm extends React.Component {
                     </div>
                   </div>
 
-                  <div class="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
-                    <p class="control">
-                      <button class="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                  <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
+                    <p className="control">
+                      <button className="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
                         Submit
                     </button>
                     </p>
-                    <p class="control">
-                      <button class="button is-light">
+                    <p className="control">
+                      <button className="button is-light">
                         Cancel
                     </button>
                     </p>

@@ -1,3 +1,9 @@
+
+html, body {
+  height: 100%;
+}
+
+
 .logo-nav {
   font-family: 'Saira Extra Condensed', sans-serif;
   color: white;
@@ -47,6 +53,10 @@
 }
 .athiti {
   font-family: 'Athiti', sans-serif;
+}
+.spartan {
+  font-family: 'Spartan', sans-serif;
+
 }
 .container-form {
   max-width: 800px;
@@ -137,9 +147,10 @@
 
 .gray-bg {
   background-color: #f8f8f9;
+  min-height: 100%;
 }
 
-button, span {
+button{
   font-family: 'Athiti', sans-serif;
 }
 
@@ -155,11 +166,14 @@ button, span {
 .error {
   color: red;
   font-size: 0.7rem;
+  font-family: Athiti, sans-serif;
 }
 
 .error-big {
   color: red;
   font-size: 1rem;
+  font-family: Athiti, sans-serif;
+
 }
 
 .loading-box {
@@ -243,7 +257,7 @@ to {max-height: 300px;}
 } */
 
 
-.navbar-hover.navbar-item:hover {
+/* .navbar-hover.navbar-item:hover {
   background-color: pink;
   color:red;
 }
@@ -251,4 +265,39 @@ to {max-height: 300px;}
 .navbar-end :hover {
   background-color: pink;
   color:red;
+} */
+
+.drop-down{
+  align-items: center;
+  display: flex;
+  padding-right: 2.5em;
+}
+
+.navbar-link:not(.is-arrowless)::after {
+  border-color: #FFF;
+  margin-top: -0.375em;
+  right: 1.125em;
+}
+
+.navbar-space{
+  padding-top: 3.25rem;
+}
+
+.box {
+  border-radius: 0;
+  -webkit-box-shadow: 2px 2px 3px 0 rgba(117,124,129,.12);
+  box-shadow: 2px 2px 3px 0 rgba(117,124,129,.12);
+  border: 1px solid rgba(117,124,129,.12);
+}
+.field-label label{
+  font-family: 'Athiti', sans-serif;
+}
+
+.line-noti-btn{
+  border-color: #00C300;
+}
+
+.table-loading{
+  display: flex;
+  justify-content: center;
 }

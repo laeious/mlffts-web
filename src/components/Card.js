@@ -2,8 +2,8 @@ import React from 'react';
 
 function Card(props) {
     return (
-        <div className="columns is-centered">
-            <div className="column is-11">
+        <div className="columns is-centered" style={{'margin':'0'}}>
+            <div className="column is-11 no-padding-btm">
                 <div className="box no-padding-btm">
                     <div className="columns is-mobile ">
                         <div className="column is-10 no-padding-btm">

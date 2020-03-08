@@ -7,7 +7,9 @@ import Home from './components/Home';
 import { Switch, Route, Link, BrowserRouter as Router } from 'react-router-dom'
 import Navbar from './components/Navbar';
 import Line from './components/Line';
-
+import Admin from './components/Admin'
+import Notify from './components/Notify'
+import Profile from './components/Profile'
 // class DebugRouter extends Router {
 //   constructor(props){
 //     super(props);
@@ -29,10 +31,13 @@ class App extends React.Component {
       <div>
         <Router>
           <Switch>
+            <Route path="/admin" component={Admin} />
+            <Route path="/noti" component={Notify} />
             <Route path="/register" component={Register} />
+            {/* <Route path="/profile" component={Profile} /> */}
             <Route path="/line" component={Line} />
-            <Route exact path="/" component={Home} />
-            <Route path="/" component={Login} />
+            <Route path="/login" component={Login} />
+            <Route path="/" component={Home} />
           </Switch>
         </Router>
       </div>

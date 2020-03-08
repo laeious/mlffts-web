@@ -9,6 +9,9 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import { withRouter, Link } from 'react-router-dom';
 import Spinner from 'react-spinkit';
+import { Route } from 'react-router-dom';
+import Profile from './Profile';
+import Admin from './Admin';
 
 registerLocale('th', th)
 
@@ -33,12 +36,16 @@ class Home extends React.Component {
         } else {
             axios.get('https://mlffts-api.herokuapp.com/profile', {
                 headers: { Authorization: `Bearer ${token}` }
-            }).then(res => this.setState({user:res.data, isError:false})
+            }).then(res => {
+                console.log(res.data)
+                this.setState({ user: res.data, isError: false })
+            }
             ).catch(err => {
-                alert(err);
+                // alert(err);
                 console.log(err);
                 localStorage.removeItem('mlffts-jwt');
-                this.setState({user:undefined, isError: true})
+                this.setState({ user: undefined, isError: true })
+                window.location.reload();
             })
         }
 
@@ -62,205 +69,250 @@ class Home extends React.Component {
         });
     };
 
+    logout = () => {
+        const token = getToken();
+        if (!token) {
+            this.props.history.push('/login');
+        } else {
+            axios.get('https://mlffts-api.herokuapp.com/logout', {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => {
+                localStorage.removeItem('mlffts-jwt');
+                window.location.reload();
+            }
+            ).catch(err => {
+                // alert(err);
+                console.log(err);
+                localStorage.removeItem('mlffts-jwt');
+            })
+        }
+    }
 
     render() {
-        if (this.state.user === undefined && this.state.isError) {
+        if (this.state.user === undefined) {
             return (
                 <div className="loading-box">
-                    <Spinner name="ball-pulse-sync" fadeIn='quarter' /> 
+                    <Spinner name="ball-pulse-sync" fadeIn='quarter' />
                 </div>
             )
         }
-        
+
         return (
-            <div>
-                <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
-                <div className="navbar-brand">
-                    <Link to="/">
+            <div className="navbar-space">
+                <nav className="navbar  is-fixed-top has-background-grey-darker  is-transparent" role="navigation" aria-label="main navigation">
+                    <div className="navbar-brand">
+
                         <div className="navbar-item">
-                            <h1 className="title logo-nav"  onClick={() => window.location.reload()}>
-                                MLFFTS
+                            <a href="/">
+
+                                <h1 className="title logo-nav">
+                                    MLFFTS
                         </h1>
+                            </a>
                         </div>
-                    </Link>
-                </div>
-                <div className="navbar-menu">
-                    <div className="navbar-end">
-                        <div className="navbar-item">
-                                <a className="is-link has-text-white">
-                                    <b>{this.state.user ?  this.state.user.firstname :null}</b>
+
+
+                        <a className="navbar-burger" data-target="navbarList" onClick={this.handleMenu}>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div className="navbar-menu">
+                        <div className="navbar-end">
+                            <div className="navbar-item is-hoverable has-dropdown">
+                                <a className="navbar-link has-text-white athiti">
+                                    {this.state.user ? this.state.user.firstname : null}
                                 </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-                <div className="section-home athiti">
-                    {/* <section className="hero">
-                    <div className="hero-body-l">
-                        <div className="container">
-                            <h1 className="title is-3">
-                                MLFFTS
-                            </h1>
-                            <h2 className="subtitle is-6">
-                                Multilane Free Flow Toll System
-                            </h2>
-                        </div>
-                    </div>
-                </section> */}
-
-                    <div className="columns is-centered">
-
-                        <div className="column is-3 is-hidden-tablet">
-                            <h1 className="title is-4 is-size-3-widescreen home-title">ประวัติค่าผ่านทางพิเศษ</h1>
-                            <button className="button is-fullwidth search-btn-mobile" onClick={this.toggleSearch}>ค้นหา</button>
-
-                            <div className={this.state.searhActive ? "search-container-touch active" : "search-container-touch"}>
-                                <div className="has-text-centered ">
-                                    <div className="my-datepicker-container">
-                                        ตั้งแต่:
-                                    <DatePicker
-                                            selected={this.state.startDate}
-                                            onChange={this.handleChangeStartDate}
-                                            dateFormat="dd/MM/yyyy"
-                                            locale="th"
-                                            className="datepicker"
-                                            placeholderText="เลือกวันที่"
-                                            maxDate={new Date()}
-                                        />
-                                        <br />
-                                        ถึง:
-                                    <DatePicker
-                                            selected={this.state.endDate}
-                                            onChange={this.handleChangeEndDate}
-                                            dateFormat="dd/MM/yyyy"
-                                            locale="th"
-                                            className="datepicker"
-                                            placeholderText="เลือกวันที่"
-                                            maxDate={new Date()}
-
-                                        />
-                                    </div>
-
-                                    <hr />
-
-                                    <div className="entry-select-container ">
-
-                                        ด่านทางเข้า:
-                                <div className="select entry-select is-small">
-                                            <select>
-                                                <option>-</option>
-                                                <option>options 1</option>
-                                                <option>options 2</option>
-                                                <option>options 3</option>
-                                            </select>
-                                        </div>
-
-                                        <br />
-
-                                        ด่านทางออก:
-                                <div className="select entry-select is-small">
-                                            <select>
-                                                <option>-</option>
-                                                <option>options 1</option>
-                                                <option>options 2</option>
-                                                <option>options 3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
+                                <div className="navbar-dropdown is-boxed is-right">
+                                    {/* <a className="navbar-item"> */}
+                                    {
+                                        this.state.user.type === 1 ?
+                                            <Link to="/profile" className="navbar-item">
+                                                Profile
+                                        </Link>
+                                            :
+                                            null
+                                    }
+                                    {/* </a> */}
+                                    {/* <hr className="navbar-divider"/> */}
+                                    <a className="navbar-item" onClick={this.logout}>
+                                        Log out
+                            </a>
                                 </div>
-                                <div className="has-text-centered">
+                            </div>
+                        </div>
+                    </div>
+                </nav>
 
-                                    <button className="button search-button athiti">
-                                        ค้นหา
+                {
+                    this.state.user.type === 1 ?
+                        (
+                            <div>
+                                <Route
+                                    path="/profile"
+                                    render={(props) => <Profile {...props} user={this.state.user ? this.state.user : null} />}
+                                />
+
+                                <Route path="/" exact >
+                                    <div className="section-home athiti">
+
+                                        <div className="columns is-centered">
+                                            <div className="column is-3 is-hidden-tablet">
+                                                <h1 className="title is-4 is-size-3-widescreen home-title">ประวัติค่าผ่านทางพิเศษ</h1>
+                                                <button className="button is-fullwidth search-btn-mobile" onClick={this.toggleSearch}>ค้นหา</button>
+
+                                                <div className={this.state.searhActive ? "search-container-touch active" : "search-container-touch"}>
+                                                    <div className="has-text-centered ">
+                                                        <div className="my-datepicker-container">
+                                                            ตั้งแต่:
+                                    <DatePicker
+                                                                selected={this.state.startDate}
+                                                                onChange={this.handleChangeStartDate}
+                                                                dateFormat="dd/MM/yyyy"
+                                                                locale="th"
+                                                                className="datepicker"
+                                                                placeholderText="เลือกวันที่"
+                                                                maxDate={new Date()}
+                                                            />
+                                                            <br />
+                                                            ถึง:
+                                    <DatePicker
+                                                                selected={this.state.endDate}
+                                                                onChange={this.handleChangeEndDate}
+                                                                dateFormat="dd/MM/yyyy"
+                                                                locale="th"
+                                                                className="datepicker"
+                                                                placeholderText="เลือกวันที่"
+                                                                maxDate={new Date()}
+
+                                                            />
+                                                        </div>
+
+                                                        <hr />
+
+                                                        <div className="entry-select-container ">
+
+                                                            ด่านทางเข้า:
+                                <div className="select entry-select is-small">
+                                                                <select>
+                                                                    <option>-</option>
+                                                                    <option>options 1</option>
+                                                                    <option>options 2</option>
+                                                                    <option>options 3</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <br />
+
+                                                            ด่านทางออก:
+                                <div className="select entry-select is-small">
+                                                                <select>
+                                                                    <option>-</option>
+                                                                    <option>options 1</option>
+                                                                    <option>options 2</option>
+                                                                    <option>options 3</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div className="has-text-centered">
+
+                                                        <button className="button search-button athiti">
+                                                            ค้นหา
                                 </button>
-                                </div>
-                            </div>
-                            {/* <button>ค้นหา</button> */}
-                        </div>
+                                                    </div>
+                                                </div>
+                                                {/* <button>ค้นหา</button> */}
+                                            </div>
 
-                        <div className="column is-3 is-hidden-mobile">
-                            <div className="search-container">
-                                <h1 className="title is-4 is-size-3-widescreen home-title">ประวัติค่าผ่านทางพิเศษ</h1>
-                                <div className="has-text-centered ">
-                                    <div className="my-datepicker-container">
-                                        ตั้งแต่:
+                                            <div className="column is-3 is-hidden-mobile">
+                                                <div className="search-container">
+                                                    <h1 className="title is-4 is-size-3-widescreen home-title">ประวัติค่าผ่านทางพิเศษ</h1>
+                                                    <div className="has-text-centered ">
+                                                        <div className="my-datepicker-container">
+                                                            ตั้งแต่:
                                     <DatePicker
-                                            selected={this.state.startDate}
-                                            onChange={this.handleChangeStartDate}
-                                            dateFormat="dd/MM/yyyy"
-                                            locale="th"
-                                            className="datepicker"
-                                            placeholderText="เลือกวันที่"
-                                            maxDate={new Date()}
-                                        />
-                                        <br />
-                                        ถึง:
+                                                                selected={this.state.startDate}
+                                                                onChange={this.handleChangeStartDate}
+                                                                dateFormat="dd/MM/yyyy"
+                                                                locale="th"
+                                                                className="datepicker"
+                                                                placeholderText="เลือกวันที่"
+                                                                maxDate={new Date()}
+                                                            />
+                                                            <br />
+                                                            ถึง:
                                     <DatePicker
-                                            selected={this.state.endDate}
-                                            onChange={this.handleChangeEndDate}
-                                            dateFormat="dd/MM/yyyy"
-                                            locale="th"
-                                            className="datepicker"
-                                            placeholderText="เลือกวันที่"
-                                            maxDate={new Date()}
+                                                                selected={this.state.endDate}
+                                                                onChange={this.handleChangeEndDate}
+                                                                dateFormat="dd/MM/yyyy"
+                                                                locale="th"
+                                                                className="datepicker"
+                                                                placeholderText="เลือกวันที่"
+                                                                maxDate={new Date()}
 
-                                        />
-                                    </div>
+                                                            />
+                                                        </div>
 
-                                    <hr />
+                                                        <hr />
 
-                                    <div className="entry-select-container ">
+                                                        <div className="entry-select-container ">
 
-                                        ด่านทางเข้า:
+                                                            ด่านทางเข้า:
                                 <div className="select entry-select is-small">
-                                            <select>
-                                                <option>-</option>
-                                                <option>options 1</option>
-                                                <option>options 2</option>
-                                                <option>options 3</option>
-                                            </select>
-                                        </div>
+                                                                <select>
+                                                                    <option>-</option>
+                                                                    <option>options 1</option>
+                                                                    <option>options 2</option>
+                                                                    <option>options 3</option>
+                                                                </select>
+                                                            </div>
 
-                                        <br />
+                                                            <br />
 
-                                        ด่านทางออก:
+                                                            ด่านทางออก:
                                 <div className="select entry-select is-small">
-                                            <select>
-                                                <option>-</option>
-                                                <option>options 1</option>
-                                                <option>options 2</option>
-                                                <option>options 3</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                                                <select>
+                                                                    <option>-</option>
+                                                                    <option>options 1</option>
+                                                                    <option>options 2</option>
+                                                                    <option>options 3</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
 
 
-                                </div>
-                                <div className="has-text-centered">
+                                                    </div>
+                                                    <div className="has-text-centered">
 
-                                    <button className="button search-button athiti">
-                                        ค้นหา
+                                                        <button className="button search-button athiti">
+                                                            ค้นหา
                                 </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column is-7 ">
-                            <div className="card-container" id="style-2">
-                                <Card />
-                                <Card />
-                                <Card />
-                                <Card />
-                                <Card />
-                                <Card />
-                                <Card />
-                                <Card />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="column is-7 ">
+                                                <div className="card-container" id="style-2">
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                    <Card />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Route>
+                            </div>)
+                        :
+                        <Admin />
+                }
             </div>
         )
     }

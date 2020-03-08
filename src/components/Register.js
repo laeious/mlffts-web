@@ -16,8 +16,6 @@ class Register extends React.Component {
         lastName: '',
         citizen_id: '',
         email: '',
-        license: '',
-        province: '',
         e_code: '',
       },
       errors: {
@@ -28,8 +26,6 @@ class Register extends React.Component {
         lastName: '',
         citizen_id: '',
         email: '',
-        license: '',
-        province: '',
         e_code: ''
       },
       checkNull: true,
@@ -84,7 +80,6 @@ class Register extends React.Component {
 
     let checkNull = false;
     for (let i in userForm) {
-      console.log(i)
       if (userForm[i] === '') {
         checkNull = true;
       }
@@ -97,7 +92,8 @@ class Register extends React.Component {
       }
     }
 
-    console.log(checkNull)
+    console.log(checkNull,checkErrors)
+
     this.setState({ userForm, errors, checkNull, checkErrors })
   }
 
@@ -130,6 +126,13 @@ class Register extends React.Component {
       }).catch(err => {
         console.log('error ja')
         console.log(err)
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          // console.log(err.response.headers);
+          
+          // this.setState({ isLoading: false, isError: err.response.data })
+      }
       })
 
   }
@@ -164,45 +167,50 @@ class Register extends React.Component {
   render() {
     let errors = this.state.errors;
     return (
-      <div>
-         <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
-           <div className="navbar-brand">
-                    <Link to="/">
-                        <div className="navbar-item">
-                            <h1 className="title logo-nav"  onClick={() => window.location.reload()}>
-                                MLFFTS
+      <div className="navbar-space">
+         <nav className="navbar  is-fixed-top has-background-grey-darker  is-transparent" role="navigation" aria-label="main navigation">
+                    <div className="navbar-brand">
+                        <Link to="/">
+                            <div className="navbar-item">
+                                <h1 className="title logo-nav">
+                                    MLFFTS
                         </h1>
-                        </div>
-                    </Link>
-                </div>
-            <div className="navbar-menu">
-                <div className="navbar-end">
-                    <div className="navbar-item">
-                        <div className="buttons">
-                            <a className="navbar-item button is-link has-text-white">
-                                    <b>เข้าสู่ระบบ</b>
+                            </div>
+                        </Link>
+
+                        <a className="navbar-burger" data-target="navbarList" onClick={this.handleMenu}>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div className="navbar-menu">
+                        <div className="navbar-end">
+                            <div className="navbar-item">
+                                <a className="has-text-white athiti" href="/login">
+                                    เข้าสู่ระบบ
                                 </a>
-                            <a className="navbar-item button is-link has-text-white">
-                                    <b>สมัครสมาชิก</b>
+                                </div>
+                            <div className="navbar-item">
+                                <a className="has-text-white athiti" href="/register">
+                                    สมัครสมาชิก
                                 </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </nav>
 
-      <div className="section gray-bg" style={{ padding: "1rem 1.5rem" }}>
+
+                </nav>
+
+
+      <div className="section" style={{ padding: "1rem 1.5rem" }}>
         <div className="contianer">
-          {/* <div className="topic">
-            <h2 className="title is-1">Register</h2>
-          </div> */}
 
           <div className="columns is-centered">
             <div className="column  is-half is-12-moible is-10-tablet is-6-widescreen ">
               <div className="register box">
                 <div className=" container">
-
-                  <h3 className="title is-2 has-text-centered">Register</h3>
+                  <h3 className="title is-2 has-text-centered athiti">Register</h3>
 
                   <hr />
                   <div className="field is-horizontal">
@@ -350,7 +358,7 @@ class Register extends React.Component {
                     </div>
                   </div>
 
-                  <div className="field is-horizontal long-label">
+                  {/* <div className="field is-horizontal long-label">
                     <div className="field-label is-normal">
                       <label className=" ">License number</label>
                     </div>
@@ -366,9 +374,9 @@ class Register extends React.Component {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="field is-horizontal">
+                  {/* <div className="field is-horizontal">
                     <div className="field-label is-normal">
                       <label className=" ">Province</label>
                     </div>
@@ -384,27 +392,19 @@ class Register extends React.Component {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
-
-                  <button className="button centered">
-                    Add more car
-                  </button>
-
-
-
-
-
-
-                  <div class="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
-                    <p class="control">
-                      <button class="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                  <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
+                    <p className="control">
+                      <button className="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
                         Submit
                     </button>
                     </p>
-                    <p class="control">
-                      <button class="button is-light">
+                    <p className="control">
+                      <button className="button is-light">
+                        <a href="/">
                         Cancel
+                        </a>
                     </button>
                     </p>
                   </div>

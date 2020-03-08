@@ -5,7 +5,8 @@ import qs from 'qs';
 import jwt from 'jwt-decode';
 import Navbar from './Navbar';
 import Home from './Home';
-import Spinner from 'react-spinkit'
+import Spinner from 'react-spinkit';
+import getToken from '../helpers/getToken';
 
 class Login extends React.Component {
 
@@ -26,9 +27,18 @@ class Login extends React.Component {
             isLoading: false
         }
 
+
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.submit = this.submit.bind(this);
+    }
+
+    componentDidMount(){
+        const token = getToken();
+        console.log(token);
+        if (token) {
+            this.props.history.push('/');
+        } 
     }
 
     // checkLogin() {
@@ -81,7 +91,7 @@ class Login extends React.Component {
     }
 
     submit() {
-        this.setState({ isLoading: true });
+        // this.setState({ isLoading: true });
         if (this.state.username !== '' && this.state.password !== '') {
             const reqBody = {
                 username: this.state.username,
@@ -93,13 +103,14 @@ class Login extends React.Component {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }
+            localStorage.removeItem('mlffts-jwt');
 
             console.log(reqBody);
             axios.post('https://mlffts-api.herokuapp.com/login', qs.stringify(reqBody), config).then(
                 res => {
-                    console.log('res')
-                    console.log(res);
-                    console.log(res.data.token);
+                    // console.log('res')
+                    // console.log(res);
+                    // console.log(res.data.token);
                     localStorage.setItem('mlffts-jwt', res.data.token);
                     this.props.history.push('/');
 
@@ -107,8 +118,11 @@ class Login extends React.Component {
                     if (err.response) {
                         console.log(err.response.data);
                         console.log(err.response.status);
-                        console.log(err.response.headers);
-                        this.setState({ isLoading: false, isError: err.response.data })
+                        // console.log(err.response.headers);
+                        if(err.response.status === 403){
+                            // not verify email
+                        }
+                        // this.setState({ isLoading: false, isError: err.response.data })
                     }
                 })
         }
@@ -117,7 +131,7 @@ class Login extends React.Component {
 
 
     render() {
-        console.log(window.location.href)
+        // console.log(window.location.href)
         // if (this.state.isChecked && this.state.user) {
         //     return (
         //         <div>
@@ -128,8 +142,8 @@ class Login extends React.Component {
         // }
 
         return (
+            <div className="navbar-space">
             <div className="section" style={{ padding: "1rem 1.5rem" }}>
-                <Navbar/>
                 <div className="hero-body-l">
 
                     <div className="container">
@@ -178,7 +192,8 @@ class Login extends React.Component {
                                         </div>
 
 
-                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
+                                        {/* <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=https://mlffts-web.herokuapp.com/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz"> */}
+                                        <a href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=1653371073&redirect_uri=http://localhost:8080/line&state=12345abcde&scope=openid%20profile%20email&nonce=09876xyz">
                                             <button className="button line-btn is-fullwidth">
                                                 เข้าสู่ระบบผ่าน LINE
                                     </button>
@@ -191,8 +206,9 @@ class Login extends React.Component {
                     </div>
                 </div>
             </div>
+            </div>
         );
     }
 }
 
-export default withRouter(Login);
+export default Login;
