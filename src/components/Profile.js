@@ -257,7 +257,8 @@ class Profile extends React.Component {
                               </span>
                             </button>
                             :
-                            <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify">
+                            // <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify">
+                            <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=mlffts-web.herokuapp.com/noti&state=12345abcde&scope=notify">
                               <button className="button line-noti-btn is-outlined">
                                 <span>Get Notify!</span>
                               </button>

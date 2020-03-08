@@ -48,7 +48,7 @@ class Notify extends React.Component {
             const reqBody = {
                 grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: 'http://localhost:8080/noti',
+                redirect_uri: 'https://mlffts-web.herokuapp.com/noti',
                 client_id: '1653327020',
                 client_secret: '94d3f73ce54cb17235785bf81bdd802c'
             }
