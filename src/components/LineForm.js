@@ -252,7 +252,7 @@ class LineForm extends React.Component {
 
                   <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                     <p className="control">
-                      <button className="button is-primary" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                      <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
                         Submit
                     </button>
                     </p>

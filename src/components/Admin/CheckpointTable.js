@@ -12,7 +12,40 @@ import {
 import axios from 'axios';
 import getToken from '../../helpers/getToken';
 import Spinner from 'react-spinkit';
-import qs from 'qs'
+import qs from 'qs';
+import { withStyles } from '@material-ui/core/styles';
+
+const TableRowBase = ({ tableRow, selected, onToggle, classes, ...restProps }) => {
+
+    // const handleClick = () => {
+    //     alert(JSON.stringify(tableRow.row));
+    // };
+
+    // const handleDoubleClick = () => {
+    //     alert(JSON.stringify(tableRow.row));
+    // }
+
+    return (
+        <Table.Row
+            {...restProps}
+            className={classes.customRow}
+            style={{ color: 'green' }}
+            // onClick={handleClick}
+            // onDoubleClick={handleDoubleClick}
+        />
+    );
+};
+
+const styles = {
+    customRow: {
+        '&:hover': {
+            backgroundColor: '#F5F5F5',
+        }
+    },
+};
+
+const CustomRow = withStyles(styles, { name: 'CustomRow' })(TableRowBase);
+
 
 
 
@@ -66,7 +99,7 @@ export default (props) => {
             ).catch((err) => {
                 console.log(err)
                 setLoading(false)
-                props.history.push('/login');
+                // props.history.push('/login');
             });
             setLastQuery(queryString);
         }
@@ -238,7 +271,7 @@ export default (props) => {
                 <CustomPaging
                     totalCount={totalCount}
                 />
-                <Table />
+                <Table rowComponent={CustomRow} />
                 <TableHeaderRow />
                 <TableEditRow />
                 <TableEditColumn

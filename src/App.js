@@ -25,6 +25,18 @@ import Profile from './components/Profile'
 
 class App extends React.Component {
 
+  state = {
+    lang: 'en'
+  }
+
+  handleToggleLang = () => {
+    if (this.state.lang === 'en') {
+      this.setState({ lang: 'th' })
+    } else {
+      this.setState({ lang: 'en' })
+    }
+  }
+
   render() {
 
     return (
@@ -33,11 +45,11 @@ class App extends React.Component {
           <Switch>
             <Route path="/admin" component={Admin} />
             <Route path="/noti" component={Notify} />
-            <Route path="/register" component={Register} />
+            <Route path="/register" render={(props) => <Register {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
             {/* <Route path="/profile" component={Profile} /> */}
             <Route path="/line" component={Line} />
-            <Route path="/login" component={Login} />
-            <Route path="/" component={Home} />
+            <Route path="/login" render={(props) => <Login {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+            <Route path="/" render={(props) => <Home {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
           </Switch>
         </Router>
       </div>

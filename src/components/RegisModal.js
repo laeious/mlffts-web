@@ -273,7 +273,7 @@ class RegisModal extends React.Component {
 
                   <div class="field is-grouped is-grouped-right">
                     <p class="control">
-                      <button class="button is-primary">
+                      <button class="button is-dark">
                         Submit
                     </button>
                     </p>
