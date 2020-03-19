@@ -34,12 +34,13 @@ class Home extends React.Component {
             isLoading: false,
             transList: [],
             noMoreData: false,
-            license_list: []
+            license_list: [],
         }
     }
 
 
     componentDidMount() {
+
         const token = getToken();
         console.log(token);
         if (!token) {
@@ -50,7 +51,7 @@ class Home extends React.Component {
             }).then(res => {
                 console.log(res.data)
                 this.setState({ user: res.data, isError: false })
-                if(res.data.type === 0 ){
+                if (res.data.type === 0) {
                     this.loadLP(token);
                     this.loadData();
                 }
@@ -104,8 +105,8 @@ class Home extends React.Component {
         axios.get(`https://mlffts-api.herokuapp.com/lpinfo`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(res => {
-            let options = res.data.map((item,i)=> ({ value: item.license_number, label:item.license_number}));
-            this.setState({ license_list : options })
+            let options = res.data.map((item, i) => ({ value: item.license_number, label: item.license_number }));
+            this.setState({ license_list: options })
         }
         ).catch(err => {
             // alert(err);
@@ -144,6 +145,38 @@ class Home extends React.Component {
                         this.setState({ noMoreData: true })
                     }
                     this.setState({ isLoading: false })
+                }
+            })
+        }
+    }
+
+    loadPDF = (id) => {
+        const token = getToken();
+        if (!token) {
+            this.props.history.push('/login');
+        } else {
+            axios.get(`https://mlffts-api.herokuapp.com/transaction/single-gen?transaction_id=${id}`, {
+                responseType: 'blob',
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => {
+                const file = new Blob(
+                    [res.data],
+                    { type: 'application/pdf' });
+
+                const fileURL = URL.createObjectURL(file);
+
+                window.open(fileURL);
+            }
+            ).catch(err => {
+                // alert(err);
+                console.log(err);
+                if (err.response) {
+                    console.log(err.response)
+                    // if (err.response.status === 500) {
+                    //     // not verify email
+
+                    // }
+                    // this.setState({ isLoading: false })
                 }
             })
         }
@@ -219,12 +252,11 @@ class Home extends React.Component {
                             <div>
                                 <Route
                                     path="/profile"
-                                    render={(props) => <Profile {...props} user={this.state.user ? this.state.user : null} lang={this.props.lang}/>}
+                                    render={(props) => <Profile {...props} user={this.state.user ? this.state.user : null} lang={this.props.lang} />}
                                 />
 
                                 <Route path="/" exact >
                                     <div className="section-home athiti">
-
                                         <div className="columns is-centered">
                                             <div className="column is-3 is-hidden-tablet">
                                                 <div className="has-text-centered add-btm-padding ">
@@ -259,7 +291,7 @@ class Home extends React.Component {
                                                             />
                                                         </div>
 
-                                                        <hr />
+                                                        <hr className="my-hr" />
 
                                                         <div className="entry-select-container ">
 
@@ -317,14 +349,14 @@ class Home extends React.Component {
                                                             />
                                                         </div>
 
-                                                        <hr />
+                                                        <hr className="my-hr" />
 
                                                         <div className="entry-select-container ">
 
                                                             <Lang lang={this.props.lang} en='Select car' th="เลือกรถ" />:
 
-                                                            <Select 
-                                                                styles={styles} 
+                                                            <Select
+                                                                styles={styles}
                                                                 options={this.state.license_list}
                                                                 isClearable={true}
                                                                 isSearchable="false"
@@ -343,19 +375,20 @@ class Home extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="column is-7 ">
-                                                <div className="card-container" id="style-2"> 
+                                                <div className="card-container" id="style-2">
                                                     {this.state.transList.map((item, i) => {
                                                         let time = new Date(item.last_update);
                                                         let timeString = time.toLocaleString();
                                                         return <Card
-                                                            key={i}
+                                                            key={item.id}
+                                                            id={item.id}
                                                             lang={this.props.lang}
                                                             entry={<Lang lang={this.props.lang} en={item.from_en} th={item.from_th} />}
                                                             exit={<Lang lang={this.props.lang} en={item.to_en} th={item.to_th} />}
                                                             cost={item.cost}
                                                             time={timeString}
                                                             lp={item.lp_info}
-                                                            pdf={null} />
+                                                            pdf={()=>this.loadPDF(item.id)} />
                                                     })}
 
                                                     <div className="columns is-centered" >

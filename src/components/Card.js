@@ -35,13 +35,13 @@ function Card(props) {
                             </div>
                         </div>
                         <div className="column is-2  is-centered has-text-centered  is-hidden-desktop recipe-icon-box ">
-                            <figure className="image is-1by1 ">
+                            <figure className="image is-1by1">
                                 <img className="is-rounded recipe-icon" src="/images/receipt.png" />
                             </figure>
                         </div>
                         <div className="column is-2  is-centered has-text-centered  is-hidden-touch recipe-icon-box">
                             <figure className="image is-48x48  is-inline-block ">
-                                <img className="is-rounded recipe-icon" src="/images/receipt.png" />
+                                <img className="is-rounded recipe-icon" src="/images/receipt.png" onClick={props.pdf}/>
                             </figure>
                         </div>
                     </div>

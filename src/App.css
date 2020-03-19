@@ -72,6 +72,7 @@ html, body {
 .recipe-icon {
   max-width: 48px;
   max-height: 48px;
+  cursor: pointer;
 }
 .small-padding-btm {
   padding-bottom: 0.5em;
@@ -545,4 +546,8 @@ input,span{
     -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
+}
+
+.my-hr {
+  line-height: 0.9rem;
 }
