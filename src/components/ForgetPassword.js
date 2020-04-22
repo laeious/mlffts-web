@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Lang from '../helpers/Lang';
 import Modal from './Modal';
 
-class Register extends React.Component {
+class ForgetPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,54 +54,31 @@ class Register extends React.Component {
 
     if (name === 'username') {
       userForm.username = value;
-      if(this.props.lang === 'en'){
-        errors.username = (value.length < 4 || !this.validateUser(value)) ? 'Username must be atleast 5 characters long' : '';
-      }else{
-        errors.username = (value.length < 4 || !this.validateUser(value)) ? 'ต้องมีความยาวอย่างน้อย 5 ตัวอักษร' : '';
-      }
+      errors.username = (value.length < 4 || !this.validateUser(value)) ? 'Username must be atleast 5 characters long' : '';
     } else if (name === 'password') {
       userForm.password = value
-      
-      if(this.props.lang === 'en'){
-        errors.password = (value.length < 5 || !this.validatePassword(value)) ? 'Password must be atleast 6 characters long' : '';
-      }else{
-        errors.password = (value.length < 5 || !this.validatePassword(value)) ? 'ต้องมีความยาวอย่างน้อย 6 ตัวอักษร' : '';
-      }
+      errors.password = (value.length < 2 || !this.validatePassword(value)) ? 'Password must be atleast 2 characters long' : '';
     } else if (name === 'comfirmPassword') {
       userForm.comfirmPassword = value
-      if(this.props.lang === 'en'){
-        errors.comfirmPassword = (userForm.password !== value) ? 'Password and confirmation password do not match' : '';
-      }else{
-        errors.comfirmPassword = (userForm.password !== value) ? 'รหัสผ่านทั้งสองช่องไม่ตรงกัน' : '';
-      }
+      errors.comfirmPassword = (userForm.password !== value) ? 'Password and confirmation password do not match' : '';
     } else if (name === 'firstname') {
       userForm.firstname = value
-      errors.firstname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
+      errors.firstname = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
     } else if (name === 'lastname') {
       userForm.lastname = value
-      errors.lastname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
+      errors.lastname = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
     } else if (name === 'citizen_id') {
       userForm.citizen_id = value
-      if(this.props.lang === 'en'){
-        errors.citizen_id = !this.validateCitizenID(value) ? 'Invalid Citizen ID' : '';
-      }else{
-        errors.citizen_id = !this.validateCitizenID(value) ? 'รหัสประชาชนไม่ถูกต้อง' : '';
-      }
+      errors.citizen_id = !this.validateCitizenID(value) ? 'Number 13 digits' : '';
     } else if (name === 'email') {
       userForm.email = value
-      if(this.props.lang === 'en'){
-        errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-      }else{
-        errors.email = !this.validateEmail(value) ? 'อีเมลไม่ถูกต้อง' : '';
-      }
+      errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
+    } else if (name === 'license') {
+      userForm.license = value
+    } else if (name === 'province') {
+      userForm.province = value
     } else if (name === 'e_code') {
       userForm.e_code = value
-      
-      if(this.props.lang === 'en'){
-        errors.e_code = !this.validateEcode(value) ? 'Invalid E_code': '';
-      }else{
-        errors.e_code = !this.validateEcode(value) ? 'E_code ไม่ถูกต้อง': '';
-      }
     }
 
     let checkNull = false;
@@ -124,9 +101,7 @@ class Register extends React.Component {
   }
 
   submit(event) {
-    // event.preventDefault();
-    this.setState({ isLoading: true });
-
+    event.preventDefault();
     const userForm = this.state.userForm;
     const reqBody = {
       username: userForm.username,
@@ -135,6 +110,8 @@ class Register extends React.Component {
       lastname: userForm.lastname,
       citizen_id: userForm.citizen_id,
       email: userForm.email,
+      license: userForm.license,
+      province: userForm.province,
       e_code: userForm.e_code,
     }
 
@@ -145,11 +122,10 @@ class Register extends React.Component {
     }
 
     console.log('in submit');
-    console.log(reqBody)
-   
+    this.setState({ isLoading: true });
+
     axios.post('https://mlffts-api.herokuapp.com/register', qs.stringify(reqBody), config).then(
       res => {
-        console.log(this.state.isLoading)
         console.log(res)
         this.setState({ isLoading: false, isModal:true })
         // show modal and reload
@@ -178,12 +154,7 @@ class Register extends React.Component {
   }
 
   validateCitizenID = (user) => {
-    let re = /^(\d{13})$/;
-    return re.test(String(user));
-  }
-
-  validateEcode= (user) => {
-    let re = /^(\d{10})$/;
+    let re = /^[0-9]*$/;
     return re.test(String(user));
   }
 
@@ -250,7 +221,7 @@ class Register extends React.Component {
                   <div className="column is-11">
                     <div className="container">
                       <span className="icon check-icon">
-                        <i className="far fa-check-circle"></i>
+                        <i class="far fa-check-circle"></i>
                       </span>
                     </div>
                     <p className="title Sarabun" style={{marginTop:'1rem'}}><Lang lang={this.props.lang} en="Registration completed successfully" th="สมัครสมาชิกเสร็จสมบูรณ์" /></p>
@@ -275,7 +246,7 @@ class Register extends React.Component {
                     <hr />
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Username" th="ชื่อผู้ใช้" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Username" th="ชื่อผู้ใช้" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -293,7 +264,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Password" th="รหัสผ่าน" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Password" th="รหัสผ่าน" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -311,7 +282,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Confirm Password" th="ยืนยันรหัสผ่าน" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Confirm Password" th="ยืนยันรหัสผ่าน" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -330,7 +301,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="First Name" th="ชื่อ" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Firstname" th="ชื่อ" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -348,7 +319,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Last Name" th="นามสกุล" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Lastname" th="นามสกุล" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -366,7 +337,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Citizen ID" th="รหัสประชาชน" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Citizen ID" th="รหัสประชาชน" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -384,7 +355,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล" /> <span className="red-span">*</span></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล" /> *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -402,7 +373,7 @@ class Register extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" ">E_code <span className="red-span">*</span></label>
+                        <label className=" ">E_code *</label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -420,7 +391,7 @@ class Register extends React.Component {
 
                     <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                       <p className="control">
-                        <button className={`button is-dark ${this.state.isLoading ? 'is-loading' : ''}`} disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                        <button className={`button is-dark ${this.state.isLoading ? 'is-active' : ''}`} disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
                           <Lang lang={this.props.lang} en="Submit" th="ยืนยัน" />
                         </button>
                       </p>
@@ -449,4 +420,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default ForgetPassword;

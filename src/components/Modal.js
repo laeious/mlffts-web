@@ -9,7 +9,6 @@ export default (props) => {
             <div className="modal-content">
                 {props.children}
             </div>
-            <button className="modal-close is-large" aria-label="close" onClick={props.toggle}></button>
         </div>
     )
 }

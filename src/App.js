@@ -4,12 +4,10 @@ import './App.css';
 import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
-import { Switch, Route, Link, BrowserRouter as Router } from 'react-router-dom'
-import Navbar from './components/Navbar';
+import { Switch, Route,  BrowserRouter as Router } from 'react-router-dom'
 import Line from './components/Line';
 import Admin from './components/Admin'
 import Notify from './components/Notify'
-import Profile from './components/Profile'
 // class DebugRouter extends Router {
 //   constructor(props){
 //     super(props);
@@ -22,6 +20,7 @@ import Profile from './components/Profile'
 //     });
 //   }
 // }
+
 
 class App extends React.Component {
 
@@ -36,11 +35,11 @@ class App extends React.Component {
       this.setState({ lang: 'en' })
     }
   }
+  
 
   render() {
 
     return (
-      <div>
         <Router>
           <Switch>
             <Route path="/admin" component={Admin} />
@@ -52,7 +51,6 @@ class App extends React.Component {
             <Route path="/" render={(props) => <Home {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
           </Switch>
         </Router>
-      </div>
     );
   }
 }

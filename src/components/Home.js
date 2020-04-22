@@ -35,6 +35,34 @@ class Home extends React.Component {
             transList: [],
             noMoreData: false,
             license_list: [],
+            months_th: [
+                { value: 1, label: 'มกราคม' },
+                { value: 2, label: 'กุมภาพันธ์' },
+                { value: 3, label: 'มีนาคม' },
+                { value: 4, label: 'เมษายน' },
+                { value: 5, label: 'พฤษภาคม' },
+                { value: 6, label: 'มิถุนายน' },
+                { value: 7, label: 'กรกฎาคม' },
+                { value: 8, label: 'สิงหาคม' },
+                { value: 9, label: 'กันยายน' },
+                { value: 10, label: 'ตุลาคม' },
+                { value: 11, label: 'พฤศจิกายน' },
+                { value: 12, label: 'ธันวาคม' },
+            ],
+            months_en: [
+                { value: 1, label: 'January' },
+                { value: 2, label: 'February' },
+                { value: 3, label: 'March' },
+                { value: 4, label: 'April' },
+                { value: 5, label: 'May' },
+                { value: 6, label: 'June' },
+                { value: 7, label: 'July' },
+                { value: 8, label: 'August' },
+                { value: 9, label: 'September' },
+                { value: 10, label: 'October' },
+                { value: 11, label: 'November' },
+                { value: 12, label: 'December' },
+            ]
         }
     }
 
@@ -71,16 +99,54 @@ class Home extends React.Component {
     }
 
     handleChangeStartDate = date => {
+        // let dateString = date.toISOString().replace('T', ' ').slice(0,-5)
+        // console.log(dateString)
         this.setState({
             startDate: date
         });
     };
 
     handleChangeEndDate = date => {
+        // let dateString = date.toISOString().replace('T', ' ').slice(0,-5)
+        // console.log(dateString)
         this.setState({
             endDate: date
         });
     };
+
+    search = () => {
+        const token = getToken();
+        this.setState({transList: []});
+        if (!token) {
+            this.props.history.push('/login');
+        } else {
+            this.setState({ isLoading: true })
+            let startDateStr = this.state.startDate ? this.state.startDate.toISOString().replace('T', ' ').slice(0,-5) :  new Date("2019-01-01T01:00:00Z");
+            let endDateStr = this.state.endDate ? this.state.endDate.toISOString().replace('T', ' ').slice(0,-5) : new Date();
+            axios.get(`https://mlffts-api.herokuapp.com/transaction?status=1&date_from=${startDateStr}&date_to=${endDateStr}&limit=2&offset=${this.state.transList.length}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => {
+                let oldData = this.state.transList;
+                let allData = oldData.concat(res.data.data)
+                if (res.data.data.length === 0) {
+                    this.setState({ noMoreData: true })
+                }
+                console.log(allData)
+                this.setState({ transList: allData, isLoading: false })
+            }
+            ).catch(err => {
+                // alert(err);
+                console.log(err);
+                if (err.response) {
+                    if (err.response.status === 500) {
+                        // not verify email
+                        this.setState({ noMoreData: true })
+                    }
+                    this.setState({ isLoading: false })
+                }
+            })
+        }
+    }
 
     logout = () => {
         const token = getToken();
@@ -128,11 +194,14 @@ class Home extends React.Component {
             this.props.history.push('/login');
         } else {
             this.setState({ isLoading: true })
-            axios.get(`https://mlffts-api.herokuapp.com/transaction/limit=2&offset=${this.state.transList.length}`, {
+            axios.get(`https://mlffts-api.herokuapp.com/transaction?limit=2&offset=${this.state.transList.length}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(res => {
                 let oldData = this.state.transList;
                 let allData = oldData.concat(res.data.data)
+                if (res.data.data.length === 0) {
+                    this.setState({ noMoreData: true })
+                }
                 console.log(allData)
                 this.setState({ transList: allData, isLoading: false })
             }
@@ -215,19 +284,19 @@ class Home extends React.Component {
                     <div className="navbar-menu">
                         <div className="navbar-end">
                             <div className="navbar-item is-hoverable has-dropdown ">
-                                <a className="navbar-link has-text-white athiti">
+                                <a className="navbar-link has-text-white Sarabun">
                                     {this.state.user ? this.state.user.firstname : null}
                                 </a>
                                 <div className="navbar-dropdown is-boxed is-right ">
                                     {
                                         this.state.user.type !== 1 ?
-                                            <Link to="/profile" className="navbar-item athiti is-1rem">
+                                            <Link to="/profile" className="navbar-item Sarabun is-1rem">
                                                 <Lang lang={this.props.lang} en='Profile' th="โปรไฟล์" />
                                             </Link>
                                             :
                                             null
                                     }
-                                    <a className="navbar-item athiti is-1rem" onClick={this.logout}>
+                                    <a className="navbar-item Sarabun is-1rem" onClick={this.logout}>
                                         <Lang lang={this.props.lang} en='Log out' th="ออกจากระบบ" />
                                     </a>
                                     <hr className="navbar-divider"></hr>
@@ -256,66 +325,10 @@ class Home extends React.Component {
                                 />
 
                                 <Route path="/" exact >
-                                    <div className="section-home athiti">
+                                    <div className="section-home Sarabun">
                                         <div className="columns is-centered">
                                             <div className="column is-3 is-hidden-tablet">
-                                                <div className="has-text-centered add-btm-padding ">
-                                                    <h1 className={`title ${this.props.lang === 'en' ? 'is-4' : 'is-4'} is-size-3-widescreen home-title`}><Lang lang={this.props.lang} en='Transaction' th="ประวัติค่าผ่านทาง" /></h1>
-                                                </div>
-                                                <button className="button is-fullwidth search-btn-mobile" onClick={this.toggleSearch}><Lang lang={this.props.lang} en='Search' th="ค้นหา" /></button>
-
-                                                <div className={this.state.searhActive ? "search-container-touch active" : "search-container-touch"}>
-                                                    <div className="has-text-centered ">
-                                                        <div className="my-datepicker-container">
-                                                            <Lang lang={this.props.lang} en='From' th="ตั้งแต่" />:
-                                    <DatePicker
-                                                                selected={this.state.startDate}
-                                                                onChange={this.handleChangeStartDate}
-                                                                dateFormat="dd/MM/yyyy"
-                                                                locale={this.props.lang === 'en' ? 'en' : 'th'}
-                                                                className="datepicker"
-                                                                placeholderText={this.props.lang === 'en' ? 'Select Date' : 'เลือกวันที่'}
-                                                                maxDate={new Date()}
-                                                            />
-                                                            <br />
-                                                            <Lang lang={this.props.lang} en='To' th="ถึง" />:
-                                    <DatePicker
-                                                                selected={this.state.endDate}
-                                                                onChange={this.handleChangeEndDate}
-                                                                dateFormat="dd/MM/yyyy"
-                                                                locale={this.props.lang === 'en' ? 'en' : 'th'}
-                                                                className="datepicker"
-                                                                placeholderText={this.props.lang === 'en' ? 'Select Date' : 'เลือกวันที่'}
-                                                                maxDate={new Date()}
-
-                                                            />
-                                                        </div>
-
-                                                        <hr className="my-hr" />
-
-                                                        <div className="entry-select-container ">
-
-                                                            <Lang lang={this.props.lang} en='Exit Plaza' th="ด่านทางออก" />:
-                                <div className="select entry-select is-small">
-                                                                <select>
-                                                                    <option>-</option>
-                                                                    <option>options 1</option>
-                                                                    <option>options 2</option>
-                                                                    <option>options 3</option>
-                                                                </select>
-                                                            </div>>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div className="has-text-centered">
-
-                                                        <button className="button search-button athiti">
-                                                            <Lang lang={this.props.lang} en='Search' th="ค้นหา" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                {/* <button>ค้นหา</button> */}
+                                                {/* mobi */}
                                             </div>
 
                                             <div className="column is-3 is-hidden-mobile">
@@ -349,18 +362,22 @@ class Home extends React.Component {
                                                             />
                                                         </div>
 
-                                                        <hr className="my-hr" />
+                            <br/>
+                                                        {/* <hr className="my-hr" /> */}
 
                                                         <div className="entry-select-container ">
 
-                                                            <Lang lang={this.props.lang} en='Select car' th="เลือกรถ" />:
+                                                            <Lang lang={this.props.lang} en='Select Car' th="เลือกรถ" />:
 
-                                                            <Select
-                                                                styles={styles}
-                                                                options={this.state.license_list}
-                                                                isClearable={true}
-                                                                isSearchable="false"
-                                                            />
+                                                            <div style={{ width: '200px' }}>
+                                                                <Select
+                                                                    styles={styles}
+                                                                    options={this.state.license_list}
+                                                                    isClearable={true}
+                                                                    isSearchable="false"
+                                                                    placeholder={this.props.lang === 'en' ? 'Select Car' : 'เลือกรถ'}
+                                                                />
+                                                            </div>
 
                                                         </div>
 
@@ -368,10 +385,41 @@ class Home extends React.Component {
                                                     </div>
                                                     <div className="has-text-centered">
 
-                                                        <button className="button search-button athiti">
+                                                        <button className="button search-button Sarabun" onClick={this.search}>
                                                             <Lang lang={this.props.lang} en='Search' th="ค้นหา" />
                                                         </button>
                                                     </div>
+
+                                                    <hr className="my-hr" />
+
+                                                    <div className="box">
+
+                                                        <div className="has-text-centered add-btm-padding ">
+                                                            <h1 className={`title ${this.props.lang === 'en' ? 'is-4' : 'is-4'} is-size-3-widescreen home-title`}><Lang lang={this.props.lang} en='Monthly Transaction' th="ประวัติค่าผ่านทางรายเดือน" /></h1>
+
+                                                            <div className="entry-select-container ">
+
+                                                                <Lang lang={this.props.lang} en='Month' th="เดือน" />:
+
+                                                            <div style={{ width: '200px' }}>
+                                                                    <Select
+                                                                        styles={styles}
+                                                                        options={this.props.lang === 'en' ? this.state.months_en : this.state.months_th}
+                                                                        isClearable={true}
+                                                                        isSearchable="false"
+                                                                        placeholder={this.props.lang === 'en' ? 'Select Month' : 'เลือกเดือน'}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="has-text-centered">
+
+                                                                <button className="button search-button Sarabun">
+                                                                    <Lang lang={this.props.lang} en='Download' th="ดาวน์โหลด" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                             <div className="column is-7 ">
@@ -388,7 +436,7 @@ class Home extends React.Component {
                                                             cost={item.cost}
                                                             time={timeString}
                                                             lp={item.lp_info}
-                                                            pdf={()=>this.loadPDF(item.id)} />
+                                                            pdf={() => this.loadPDF(item.id)} />
                                                     })}
 
                                                     <div className="columns is-centered" >

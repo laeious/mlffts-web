@@ -8,6 +8,24 @@ import Home from './Home';
 import Spinner from 'react-spinkit';
 import getToken from '../helpers/getToken';
 import Lang from '../helpers/Lang';
+import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import FilledInput from '@material-ui/core/FilledInput';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import TextField from '@material-ui/core/TextField';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import grey from '@material-ui/core/colors/grey';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+
+
 
 class Login extends React.Component {
 
@@ -19,15 +37,19 @@ class Login extends React.Component {
             isError: '',
             isLoading: false,
             usernameError: true,
-            passwordError: true
+            passwordError: true,
+            isModal: false,
+            forgetEmail: '',
+            showPassword: false
         }
-
 
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.submit = this.submit.bind(this);
     }
 
+   
+    
     componentDidMount() {
         const token = getToken();
         console.log(token);
@@ -47,6 +69,10 @@ class Login extends React.Component {
     }
 
     scrollToTop = () => this.scrollingWrapper.scrollTop = 0
+
+    toggleModal = () => { this.setState({ isModal: !this.state.isModal }) }
+
+    toggglePassword = () => { this.setState({ showPassword: !this.state.showPassword }) }
 
     submit() {
         let errorMessage = '';
@@ -90,10 +116,10 @@ class Login extends React.Component {
                         errorMessage = <Lang lang={this.props.lang} en="Incorrect username or password." th="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" />
                         if (err.response.status === 403) {
                             // not verify email
-                            errorMessage = <Lang lang={this.props.lang} en='Please verify Email' th="กรุณายืนยัน Email" />
+                            errorMessage = <Lang lang={this.props.lang} en='Please verify your Email' th="กรุณายืนยัน Email ของคุณ" />
                         }
                     }
-                    this.setState({ isLoading: false,isError: errorMessage })
+                    this.setState({ isLoading: false, isError: errorMessage })
                 })
         }
     }
@@ -101,6 +127,32 @@ class Login extends React.Component {
 
 
     render() {
+
+        let theme = createMuiTheme({
+            palette: {
+                primary: {
+                    main: '#363636',
+                },
+            },
+            typography: {
+                fontFamily: [
+                    'Sarabun',
+                    'Roboto',
+                    'sans-serif'
+                ].join(','),
+            },
+            overrides: {
+                MuiInputLabel: {
+                    outlined: {
+                        '&$shrink': {
+                          transform: this.props.lang === 'th' ? 'translate(17px, -6px) scale(0.75)':'translate(14px, -6px) scale(0.75)'
+                        },
+                }
+            }
+            }
+        });
+
+        
         return (
             <div className="navbar-space">
                 <div className="lang-box long-box-login">
@@ -113,6 +165,56 @@ class Login extends React.Component {
                     >EN</span>
                 </div>
                 <div className="section" style={{ padding: "1rem 1.5rem" }}>
+                    {this.state.isModal ?
+                        <div className="modal is-active">
+                            <div className="modal-background" onClick={this.toggleModal}></div>
+                            <div className="modal-card">
+                                <header className="modal-card-head red-color">
+                                    <p className="modal-card-title Sarabun" style={{ color: '#FFF' }}><Lang lang={this.props.lang} en="Forget Password" th="ลืมรหัสผ่าน" /></p>
+                                    <button className="delete" aria-label="close" onClick={this.toggleModal}></button>
+                                </header>
+                                <section className="modal-card-body has-text-centered" style={{ borderBottomRightRadius: '6px', borderBottomLeftRadius: '6px' }}>
+                                    <div className="columns">
+                                        <div className="column is-10">
+
+                                            <div className="field is-horizontal">
+                                                <div className="field-label is-normal">
+                                                    <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล" /></label>
+                                                </div>
+                                                <div className="field-body">
+                                                    <div className="field">
+                                                        <div className="control">
+                                                            <input className="input" type="text" placeholder=""
+                                                                name="forgetEmail"
+                                                                placeholder=""
+                                                                onChange={this.handleChange}
+                                                                value={this.state.forgetEmail} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <div className="field is-grouped is-grouped-right">
+                                        <p className="control">
+                                            <button className="button forget-red-btn red-color">
+                                                <Lang lang={this.props.lang} en="Send" th="ส่ง" />
+                                            </button>
+                                        </p>
+                                        <p className="control">
+                                            <button className="button" onClick={this.toggleModal}>
+                                                <Lang lang={this.props.lang} en="Cancel" th="ยกเลิก" />
+                                            </button>
+                                        </p>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        :
+                        null
+                    }
                     <div className="hero-body-l">
 
                         <div className="container">
@@ -124,7 +226,7 @@ class Login extends React.Component {
                                     <div className="columns is-centered">
                                         <div className="column is-7 has-text-centered">
                                             <span className='error-big'>{this.state.isError}</span>
-                                            <div className="field">
+                                            {/* <div className="field">
                                                 <p className="control">
                                                     <input className="input" type="username" name="username"
                                                         placeholder={this.props.lang === 'en' ? 'Username' : 'ชื่อผู้ใช้'}
@@ -132,8 +234,50 @@ class Login extends React.Component {
                                                         onChange={this.handleChange}
                                                     />
                                                 </p>
-                                            </div>
-                                            <div className="field">
+                                            </div> */}
+                                            <ThemeProvider theme={theme}>
+
+                                                <div className="space">
+                                                    <FormControl fullWidth variant="outlined" size="small">
+                                                        <InputLabel>{this.props.lang === 'en' ? 'Username' : 'ชื่อผู้ใช้'}</InputLabel>
+                                                        <OutlinedInput
+                                                            type='text'
+                                                            value={this.state.username}
+                                                            onChange={this.handleChange}
+                                                            name="username"
+                                                            labelWidth={this.props.lang === 'en' ? 70: 56}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+
+                                                <div className="space">
+                                                    <FormControl fullWidth variant="outlined" size="small" color="primary">
+                                                        <InputLabel>{this.props.lang === 'en' ? 'Password' : 'รหัสผ่าน'}</InputLabel>
+                                                        <OutlinedInput
+                                                            type={this.state.showPassword ? 'text' : 'password'}
+                                                            value={this.state.password}
+                                                            onChange={this.handleChange}
+                                                            onKeyPress={this.handleKeyPress}
+                                                            name="password"
+                                                            endAdornment={
+                                                                <InputAdornment position="end">
+                                                                    <IconButton
+                                                                        aria-label="toggle password visibility"
+                                                                        onClick={this.toggglePassword}
+                                                                        edge="end"
+                                                                    >
+                                                                        {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            }
+                                                            labelWidth={this.props.lang === 'en' ? 64: 64}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+
+                                            </ThemeProvider>
+
+                                            {/* <div className="field">
                                                 <p className="control">
                                                     <input className="input" type="password" name="password"
                                                         placeholder={this.props.lang === 'en' ? 'Password' : 'รหัสผ่าน'}
@@ -142,15 +286,21 @@ class Login extends React.Component {
                                                         onKeyPress={this.handleKeyPress}
                                                     />
                                                 </p>
-                                            </div>
+                                            </div> */}
 
-                                            <button className={this.state.isLoading ? "button is-dark is-fullwidth is-loading" : "button is-dark is-fullwidth"} onClick={this.submit}><Lang lang={this.props.lang} en="Log In" th="เข้าสู่ระบบ" /></button>
+                                            <button
+                                                className={this.state.isLoading ? "button is-dark is-fullwidth is-loading" : "button is-dark is-fullwidth"}
+                                                onClick={this.submit}
+                                                style={{ marginTop: '1rem' }}
+                                            >
+                                                <Lang lang={this.props.lang} en="Log In" th="เข้าสู่ระบบ" />
+                                            </button>
                                             <div className="columns is-marginless">
                                                 <div className="column is-paddingless">
 
                                                     <div className="move-right">
                                                         <Link to="/register"><button className="button is-text has-text-grey-dark link-btn"><Lang lang={this.props.lang} en="Register" th="สมัครสมาชิก" /></button></Link>
-                                                        <button className="button is-text has-text-grey-dark link-btn"><Lang lang={this.props.lang} en="Forget Password" th="ลืมรหัสผ่าน" /></button>
+                                                        <button className="button is-text has-text-grey-dark link-btn" onClick={this.toggleModal}><Lang lang={this.props.lang} en="Forget Password" th="ลืมรหัสผ่าน" /></button>
                                                     </div>
 
                                                 </div>
@@ -176,7 +326,7 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }

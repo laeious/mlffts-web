@@ -17,6 +17,8 @@ import Modal from '../Modal';
 import AsyncSelect from 'react-select/async';
 import Lang from '../../helpers/Lang';
 import Spinner from 'react-spinkit';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 
 
@@ -214,7 +216,7 @@ export default (props) => {
         control: base => ({
             ...base,
             minHeight: 'initial',
-            fontFamily: 'Athiti, sans-serif'
+            fontFamily: 'Sarabun, sans-serif'
         }),
         valueContainer: base => ({
             ...base,
@@ -231,7 +233,7 @@ export default (props) => {
         }),
         menu: base => ({
             ...base,
-            fontFamily: 'Athiti, sans-serif'
+            fontFamily: 'Sarabun, sans-serif'
         })
     };
 
@@ -277,15 +279,15 @@ export default (props) => {
     if (rows.length === 0) {
 
         return (
-            <div className="container">
-                <Spinner name="line-scale" fadeIn='quarter' className="table-loading" />
+            <div >
+                  <LinearProgress />
             </div>
         )
     }
 
     return (
         <div>
-                <div className={`modal  athiti  ${isModal?'is-active':''}`}>
+                <div className={`modal  Sarabun  ${isModal?'is-active':''}`}>
                     <div className="modal-background" onClick={handleToggle}></div>
                     <div className="modal-card ">
                         <header className="modal-card-head">
@@ -325,7 +327,7 @@ export default (props) => {
                                                         onChange={handleLPnum}
                                                         styles={customStyles}
                                                         isClearable={true}
-                                                        noOptionsMessage={()=>'หาไม่เจอจ้า'}
+                                                        noOptionsMessage={()=>props.lang==='en'? 'Not Found' : 'ไม่พบข้อมูล'}
                                                     />
                                                 </div>
                                             </div>
@@ -341,7 +343,7 @@ export default (props) => {
                                                         onChange={handleLPpro}
                                                         styles={customStyles}
                                                         isClearable={true}
-                                                        noOptionsMessage={()=>'หาไม่เจอจ้า'}
+                                                        noOptionsMessage={()=>props.lang==='en'? 'Not Found' : 'ไม่พบข้อมูล'}
                                                     />
                                                 </div>
                                             </div>
@@ -351,8 +353,8 @@ export default (props) => {
                             </div>
                         </section>
                         <footer className="my-card-footer ">
-                            <a className="card-footer-item submit-btn" onClick={submit}>Submit</a>
-                            <a className="card-footer-item cancel-submit-btn" onClick={handleToggle}>Cancel</a>
+                            <a className="card-footer-item submit-btn" onClick={submit}><Lang lang={props.lang} en='Submit' th="ยืนยัน" /></a>
+                            <a className="card-footer-item cancel-submit-btn" onClick={handleToggle}><Lang lang={props.lang} en='Cancel' th="ยกเลิก" /></a>
                         </footer>
                     </div>
                 </div>

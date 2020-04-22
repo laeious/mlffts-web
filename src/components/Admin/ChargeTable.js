@@ -13,6 +13,15 @@ import axios from 'axios';
 import getToken from '../../helpers/getToken';
 import Spinner from 'react-spinkit';
 import qs from 'qs';
+import Dialog from "@material-ui/core/Dialog";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Lang from '../../helpers/Lang';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -74,9 +83,23 @@ export default (props) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState();
-    const [pageSize] = useState(2);
+    const [pageSize] = useState(10);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
+    const [isDialog, setIsDialog] = useState(false);
+    const [changeSave, setChangeSave] = useState();
+    const [rowBefore, setRowBefore] = useState();
+    const [mode, setMode] = useState('');
+    const [modeTxt, setModeTxt] = useState('');
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [subDialogTitle, setSubDialogTitle] = useState('');
+    const [dialogCont, setDialogCont] = useState();
+
+    
+    const hideDialog = () => {
+        setRows(rowBefore);
+        setIsDialog(false);
+    }
 
 
     const getQueryString = () => (
@@ -213,6 +236,7 @@ export default (props) => {
         let changedRows;
         if (added) {
             console.log(added)
+            changedRows = rows;
             const startingAddedId = rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
             // const startingAddedId = totalCount+1;
             // setTotalCount(startingAddedId);
@@ -226,27 +250,62 @@ export default (props) => {
             ];
         }
         if (changed) {
-            console.log(changed)
-            editRow(changed)
+
+            const dialogtxt = props.lang === 'th' ? 'บันทึกการเปลี่ยนแปลง' : 'Save Changes';
+            const subdialogtxt = props.lang === 'th' ? 'คุณต้องการบันทึกการเปลี่ยนแปลงนี้ใช่หรือไม่' : 'Are you sure you want to save changes?';
+            const buttontxt = props.lang === 'th' ? 'บันทึก' : 'Save';
+            setMode('SAVE');
+            setModeTxt(buttontxt);
+            setDialogTitle(dialogtxt);
+            setSubDialogTitle(subdialogtxt);
+            setRowBefore(rows);
+            if (Object.values(changed)[0] !== undefined) {
+                setIsDialog(true);
+                console.log(changed);
+                setChangeSave(changed);
+                // editRow(changed);
+            }
             changedRows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
         }
         if (deleted) {
             console.log(deleted)
-            deleteRow(deleted)
+            console.log(rows);
+            const context = rows.filter(i =>  i.id == deleted[0]);
+            console.log(context)
+            const dialogtxt = props.lang === 'th' ? 'ลบ' : 'Delete';
+            const subdialogtxt = props.lang === 'th' ? 'คุณต้องการลบ checkpoint นี้ใช่หรือไม่' : 'Are you sure you want to delete this Charge?';
+            const buttontxt = props.lang === 'th' ? 'ลบ' : 'Delete';
+            setModeTxt(buttontxt);
+            setDialogTitle(dialogtxt);
+            setSubDialogTitle(subdialogtxt);
+            setDialogCont(context);
+            setRowBefore(rows);
+            setIsDialog(true);
+            setChangeSave(deleted);
+            setMode('DELETE');
+            // deleteRow(deleted);
             const deletedSet = new Set(deleted);
             changedRows = rows.filter(row => !deletedSet.has(row.id));
         }
         setRows(changedRows);
     };
 
+    const saveChanges = () => {
+        if (mode === 'SAVE') {
+            editRow(changeSave);
+        } else if (mode === 'DELETE') {
+            deleteRow(changeSave);
+        }
+        setIsDialog(false);
+    }
 
     useEffect(() => loadData());
 
-    if (rows.length === 0) {
+    if (rows === undefined || rows.length === 0) {
 
         return (
-            <div className="container">
-                    <Spinner name="line-scale" fadeIn='quarter' className="table-loading" />
+            <div >
+                  <LinearProgress />
             </div>
         )
     }
@@ -277,9 +336,42 @@ export default (props) => {
                     showAddCommand
                     showEditCommand
                     showDeleteCommand
+                    messages = {{
+                        addCommand : props.lang === 'th' ? 'เพิ่ม' : 'ADD',
+                        editCommand : props.lang === 'th' ? 'แก้ไข' : 'EDIT',
+                        cancelCommand : props.lang === 'th' ? 'ยกเลิก' : 'CANCEL',
+                        commitCommand : props.lang === 'th' ? 'ยืนยัน' : 'SAVE',
+                        deleteCommand : props.lang === 'th' ? 'ลบ' : 'DELETE'
+                    }}
                 />
                 <PagingPanel />
             </Grid>
+            <Dialog open={isDialog}>
+                    <DialogTitle><i className={`fas ${mode == 'DELETE' ? 'fa-trash-alt delete-icon' : 'fa-save save-icon' }`}/>{dialogTitle}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {subDialogTitle}
+                            <br />
+                            {dialogCont}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={saveChanges}
+                            color={mode == 'DELETE' ? "secondary" : "primary"}
+                            variant="contained"
+                        >
+                            <b>{modeTxt}</b>
+                        </Button>
+                        <Button
+                            onClick={hideDialog}
+                            variant="outlined"
+                        >
+                            <Lang lang={props.lang} th='ยกเลิก' en='Cancel' />
+                        </Button>
+
+                    </DialogActions>
+                </Dialog>
         </Paper>
     );
 };

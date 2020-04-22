@@ -52,13 +52,13 @@ class Profile extends React.Component {
 
     if (name === 'firstname') {
       userForm.firstname = value
-      errors.firstname = !this.validateName(value) ? 'A-Z/a-z or ก-ฮ' : '';
+      errors.firstname = !this.validateName(value) ? 'A-Z/a-z/ก-ฮ' : '';
     } else if (name === 'lastname') {
       userForm.lastname = value
-      errors.lastname = !this.validateName(value) ? 'A-Z/a-z or ก-ฮ' : '';
+      errors.lastname = !this.validateName(value) ? 'A-Z/a-z/ก-ฮ' : '';
     } else if (name === 'citizen_id') {
       userForm.citizen_id = value
-      errors.citizen_id = !this.validateCitizenID(value) ? 'Number 13 digits' : '';
+      errors.citizen_id = !this.validateCitizenID(value) ? 'Invalid Citizen ID' : '';
     } else if (name === 'email') {
       userForm.email = value
       errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
@@ -120,7 +120,7 @@ class Profile extends React.Component {
   }
 
   validateCitizenID = (user) => {
-    let re = /^[0-9]*$/;
+    let re = /^(\d{13})$/;
     return re.test(String(user));
   }
 
@@ -157,13 +157,13 @@ class Profile extends React.Component {
               <div className="column  is-half is-12-moible is-10-tablet is-6-widescreen ">
                 <div className="box">
                   <div className=" container has-text-centered">
-                    <h3 className="title is-2 has-text-centered athiti">PROFILE</h3>
+                    <h3 className="title is-2 has-text-centered Sarabun"><Lang lang={this.props.lang} en="Profile" th="โปรไฟล์" /></h3>
 
                     <hr />
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Firstname" th="ชื่อ"/></label>
+                        <label className=" "><Lang lang={this.props.lang} en="First Name" th="ชื่อ"/></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -181,7 +181,7 @@ class Profile extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Lastname" th="นามสกุล"/></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Last Name" th="นามสกุล"/></label>
                       </div>
                       <div className="field-body">
                         <div className="field">

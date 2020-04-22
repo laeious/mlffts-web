@@ -51,8 +51,8 @@ html, body {
   padding-bottom: 1.5rem;
   padding-top: 0.5rem;
 }
-.athiti {
-  font-family: 'Athiti', sans-serif;
+.Sarabun {
+  font-family: 'Sarabun', sans-serif;
 }
 .spartan {
   font-family: 'Spartan', sans-serif;
@@ -88,7 +88,7 @@ html, body {
 }
 
 .datepicker {
-  font-family: 'Athiti', sans-serif;
+  font-family: 'Sarabun', sans-serif;
   font-size: inherit;
   background-color: #fff;
   color: #000;
@@ -110,7 +110,7 @@ html, body {
 }
 
 .entry-select {
-  font-family: 'Athiti', sans-serif;
+  font-family: 'Sarabun', sans-serif;
   font-size: inherit;
   display: inline-block;
   position: relative;
@@ -126,6 +126,7 @@ html, body {
 
 .entry-select-container {
   text-align: center;
+  display: inline-block;
  
 }
 
@@ -140,6 +141,10 @@ html, body {
   font-weight: bold;
   color: #FFFFFF;
 }
+.search-button:active {
+  color: #FFFFFF;
+  background-color: rgb(240, 84, 57);
+}
 .card-container {
   max-width: 750px;
 }
@@ -149,7 +154,7 @@ html, body {
 }
 
 .label {
-  font-family: 'Athiti', sans-serif;
+  font-family: 'Sarabun', sans-serif;
 }
 
 @media screen and (min-width: 769px), print {
@@ -164,7 +169,7 @@ html, body {
 }
 
 button{
-  font-family: 'Athiti', sans-serif;
+  font-family: 'Sarabun', sans-serif;
 }
 
 .button.centered {
@@ -179,13 +184,13 @@ button{
 .error {
   color: red;
   font-size: 0.7rem;
-  font-family: Athiti, sans-serif;
+  font-family: Sarabun, sans-serif;
 }
 
 .error-big {
   color: red;
   font-size: 1rem;
-  font-family: Athiti, sans-serif;
+  font-family: Sarabun, sans-serif;
 
 }
 
@@ -303,7 +308,7 @@ to {max-height: 300px;}
   border: 1px solid rgba(117,124,129,.12);
 }
 .field-label label{
-  font-family: 'Athiti', sans-serif;
+  font-family: 'Sarabun', sans-serif;
 }
 
 .line-noti-btn{
@@ -316,7 +321,7 @@ to {max-height: 300px;}
 }
 
 .lang-box{
-  font-family: Athiti, sans-serif;
+  font-family: Sarabun, sans-serif;
   cursor: pointer;
 }
 
@@ -331,7 +336,7 @@ to {max-height: 300px;}
 }
 
 input,span{
-  font-family: athiti,sans-serif;
+  font-family: Sarabun,sans-serif;
 }
 .my-box{
   display: block;
@@ -463,7 +468,7 @@ input,span{
 }
 
 .lp-select input {
-  font-family: 'Athiti',sans-serif;
+  font-family: 'Sarabun',sans-serif;
 }
 
 .submit-btn{
@@ -550,4 +555,71 @@ input,span{
 
 .my-hr {
   line-height: 0.9rem;
+}
+
+.my-hr2 {
+  line-height: 0.9rem;
+}
+
+.check-icon {
+  font-size: 4rem;
+  color: #5DB542;
+  margin-bottom: 1rem;
+}
+
+.modal-login-btn{
+  /* color:white; */
+  font-weight: bold;
+}
+
+.red-span {
+  color: red;
+}
+
+.red-color{
+  background-color:#F16750;
+  color: #fff;
+}
+
+.forget-red-btn:hover{
+  color: #fff;
+  font-weight: bold;
+}
+
+.tabs li.is-active a {
+  font-weight: bold;
+}
+
+.MuiDialogTitle-root .MuiTypography-h6{
+  font-size: 1.5rem;
+  font-family: Sarabun, Roboto, sans-serif;
+  font-weight: bold;
+}
+
+.MuiDialogContent-root .MuiTypography-body1{
+  font-size: 1.1rem;
+  font-family: Sarabun, Roboto, sans-serif;
+  font-weight: 500;
+}
+
+.delete-icon{
+  margin-right: 0.8rem;
+  color: #f50057;
+}
+
+.save-icon{
+  margin-right: 0.8rem;
+  color: #3f51b5;
+}
+.modal-background{
+  background-color: rgba(10, 10, 10, 0.7);
+}
+
+.space{
+  padding: 5px 0;
+}
+
+fieldset {
+  border: 2px solid black;
+  border-radius: 10px;
 }

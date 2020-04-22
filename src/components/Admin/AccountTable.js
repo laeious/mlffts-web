@@ -19,6 +19,15 @@ import getToken from '../../helpers/getToken';
 import Spinner from 'react-spinkit';
 import qs from 'qs'
 import { withStyles } from '@material-ui/core/styles';
+import Dialog from "@material-ui/core/Dialog";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Lang from '../../helpers/Lang';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 const TableRowBase = ({ tableRow, selected, onToggle, classes, ...restProps }) => {
 
@@ -64,10 +73,10 @@ export default (props) => {
             title: 'Username',
             name: 'username'
         },
-        {
-            title: 'Password',
-            name: 'password'
-        },
+        // {
+        //     title: 'Password',
+        //     name: 'password'
+        // },
         {
             title: 'Type',
             name: 'type'
@@ -80,20 +89,20 @@ export default (props) => {
             title: 'isActivate',
             name: '_isActive'
         },
-        {
-            title: 'token',
-            name: 'token'
-        },
-        {
-            title: 'accessToken',
-            name: 'access_token'
-        },
+        // {
+        //     title: 'token',
+        //     name: 'token'
+        // },
+        // {
+        //     title: 'accessToken',
+        //     name: 'access_token'
+        // },
     ]);
 
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState();
-    const [pageSize] = useState(2);
+    const [pageSize] = useState(10);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
     const [columnWidths, setColumnWidths] = useState([
@@ -107,6 +116,18 @@ export default (props) => {
         { columnName: 'access_token', width: 240 }
     ]);
     const [hiddenColumnNames, setHiddenColumnNames] = useState(['password', 'token', 'access_token']);
+    const [isDialog, setIsDialog] = useState(false);
+    const [changeSave, setChangeSave] = useState();
+    const [rowBefore, setRowBefore] = useState();
+    const [mode, setMode] = useState('');
+    const [modeTxt, setModeTxt] = useState('');
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [subDialogTitle, setSubDialogTitle] = useState('');
+
+    const hideDialog = () => {
+        setRows(rowBefore);
+        setIsDialog(false);
+    }
 
     const getQueryString = () => (
         // 'https://mlffts-api.herokuapp.com/account'
@@ -180,21 +201,39 @@ export default (props) => {
         console.log('commitChanges')
         let changedRows;
         if (changed) {
-            console.log(changed)
-            editRow(changed)
+            const dialogtxt = props.lang === 'th' ? 'บันทึกการเปลี่ยนแปลง' : 'Save Changes';
+            const subdialogtxt = props.lang === 'th' ? 'คุณต้องการบันทึกการเปลี่ยนแปลงนี้ใช่หรือไม่' : 'Are you sure you want to save changes?';
+            const buttontxt = props.lang === 'th' ? 'บันทึก' : 'Save';
+            setMode('SAVE');
+            setModeTxt(buttontxt);
+            setDialogTitle(dialogtxt);
+            setSubDialogTitle(subdialogtxt);
+            setRowBefore(rows);
+            if (Object.values(changed)[0] !== undefined) {
+                setIsDialog(true);
+                console.log(changed);
+                setChangeSave(changed);
+                // editRow(changed);
+            }
             changedRows = rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
         }
         setRows(changedRows);
     };
 
+    const saveChanges = () => {
+        if (mode === 'SAVE') {
+            editRow(changeSave);
+        }
+        setIsDialog(false);
+    }
 
     useEffect(() => loadData());
 
     if (rows.length === 0) {
 
         return (
-            <div className="container">
-                <Spinner name="line-scale" fadeIn='quarter' className="table-loading" />
+            <div>
+                <LinearProgress />
             </div>
         )
     }
@@ -227,15 +266,48 @@ export default (props) => {
                 <TableEditRow />
                 <TableEditColumn
                     showEditCommand
+                    messages={{
+                        addCommand: props.lang === 'th' ? 'เพิ่ม' : 'ADD',
+                        editCommand: props.lang === 'th' ? 'แก้ไข' : 'EDIT',
+                        cancelCommand: props.lang === 'th' ? 'ยกเลิก' : 'CANCEL',
+                        commitCommand: props.lang === 'th' ? 'ยืนยัน' : 'SAVE',
+                        deleteCommand: props.lang === 'th' ? 'ลบ' : 'DELETE'
+                    }}
                 />
-                <TableColumnVisibility
+                {/* <TableColumnVisibility
                     hiddenColumnNames={hiddenColumnNames}
                     onHiddenColumnNamesChange={setHiddenColumnNames}
                 />
                 <Toolbar />
-                <ColumnChooser />
+                <ColumnChooser /> */}
                 <PagingPanel />
             </Grid>
+            <Dialog open={isDialog}>
+                <DialogTitle><i className={`fas ${mode == 'DELETE' ? 'fa-trash-alt delete-icon' : 'fa-save save-icon'}`} />{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {subDialogTitle}
+                        <br />
+
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={saveChanges}
+                        color={mode == 'DELETE' ? "secondary" : "primary"}
+                        variant="contained"
+                    >
+                        <b>{modeTxt}</b>
+                    </Button>
+                    <Button
+                        onClick={hideDialog}
+                        variant="outlined"
+                    >
+                        <Lang lang={props.lang} th='ยกเลิก' en='Cancel' />
+                    </Button>
+
+                </DialogActions>
+            </Dialog>
         </Paper>
     );
 };

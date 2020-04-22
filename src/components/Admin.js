@@ -4,6 +4,10 @@ import ChargeTable from './Admin/ChargeTable';
 import AccountTable from './Admin/AccountTable';
 import InvalidTable from './Admin/InvalidTable';
 import { withRouter } from 'react-router-dom';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+
 // import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-bootstrap4';
 // import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-bootstrap3';
 
@@ -14,7 +18,7 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTab: 3,
+      currentTab: 2,
       inputValue: ''
     }
   }
@@ -60,12 +64,30 @@ class Admin extends React.Component {
 
   render() {
 
+    
+    let theme = createMuiTheme({
+      typography: {
+        fontFamily: [
+            'Sarabun',
+            'Roboto',
+            'sans-serif'
+        ].join(','),
+    },
+    overrides: {
+      MuiTableCell: {
+        root: {
+          fontSize: '1rem',
+        }
+      }
+    }
+  });
+
     return (
       <div>
         <div className="navbar-space">
-          <div className="columns is-centered ">
+          <div className="columns is-centered">
             <div className="column is-11">
-              <div className="tabs is-boxed">
+              <div className="tabs is-boxed is-marginless">
                 <ul>
                   <li className={this.state.currentTab === 2 ? "is-active" : ""} >
                     <a value={2} onClick={this.handleTabsClick} >
@@ -79,7 +101,7 @@ class Admin extends React.Component {
                   </li>
                   <li className={this.state.currentTab === 1 ? "is-active" : ""} >
                     <a value={1} onClick={this.handleTabsClick} >
-                      <span value={1}>Charges</span>
+                      <span value={1}>Charge</span>
                     </a>
                   </li>
                   <li className={this.state.currentTab === 3 ? "is-active" : ""} >
@@ -92,22 +114,23 @@ class Admin extends React.Component {
 
               </div>
 
+              <ThemeProvider theme={theme} >
               {
                 this.state.currentTab === 0 ?
-                  <CheckpointTable history={this.props.history} />
+                  <CheckpointTable history={this.props.history} lang={this.props.lang}/>
                   :
                   null
               }
 
               {
                 this.state.currentTab === 1 ?
-                  <ChargeTable history={this.props.history} />
+                  <ChargeTable history={this.props.history} lang={this.props.lang}/>
                   :
                   null
               }
               {
                 this.state.currentTab === 2 ?
-                  <AccountTable history={this.props.history} />
+                  <AccountTable history={this.props.history} lang={this.props.lang}/>
                   :
                   null
               }
@@ -118,8 +141,8 @@ class Admin extends React.Component {
                   :
                   null
               }
+            </ThemeProvider>
             </div>
-
           </div>
         </div>
       </div>
