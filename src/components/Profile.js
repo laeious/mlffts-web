@@ -18,7 +18,6 @@ class Profile extends React.Component {
         line_id: '',
         email: '',
         e_code_id: '',
-        line_id: ''
       },
       errors: {
         firstname: '',
@@ -95,6 +94,7 @@ class Profile extends React.Component {
       citizen_id: userForm.citizen_id,
       email: userForm.email,
       // e_code: userForm.e_code,
+      access_token: userForm.access_token
     }
     console.log(reqBody)
     
@@ -257,9 +257,9 @@ class Profile extends React.Component {
                       </div>
                       <div className="field-body">
                         {
-                          this.state.user.line_id ?
+                          this.state.user.access_token ?
                             <button class="button is-danger is-outlined">
-                              <span>{this.state.user.line_id}</span>
+                              <span><Lang lang={this.props.lang} en="Cancel Line Notify" th="ยกเลิก Line Notify"/></span>
                               <span class="icon is-small">
                                 <i class="fas fa-times"></i>
                               </span>
@@ -268,7 +268,7 @@ class Profile extends React.Component {
                             // <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify">
                             <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=https://mlffts-web.herokuapp.com/noti&state=12345abcde&scope=notify">
                               <button className="button line-noti-btn is-outlined">
-                                <span>Get Notify!</span>
+                                <span><Lang lang={this.props.lang} en="Get Line Notify" th="ใช้ Line Notify"/></span>
                               </button>
                             </a>
 

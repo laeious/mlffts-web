@@ -86,9 +86,9 @@ class Notify extends React.Component {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
-
                     // this.setState({ isLoading: false, isError: err.response.data })
                 }
+                this.props.history.push('/profile');
             })
         } else {
             console.log('..')
@@ -106,8 +106,8 @@ class Notify extends React.Component {
         }
 
         return (
-            <div>
-                <h1 className="title">{` Notification From `}</h1>
+            <div className="loading-box">
+                <Spinner name="ball-pulse-sync" fadeIn='quarter' />
             </div>
         )
     }
