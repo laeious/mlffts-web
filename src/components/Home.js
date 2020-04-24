@@ -35,6 +35,8 @@ class Home extends React.Component {
             transList: [],
             noMoreData: false,
             license_list: [],
+            isSearchMode: false,
+            isFound: false,
             months_th: [
                 { value: 1, label: 'มกราคม' },
                 { value: 2, label: 'กุมภาพันธ์' },
@@ -114,15 +116,14 @@ class Home extends React.Component {
         });
     };
 
-    search = () => {
+    loadSearch = () => {
         const token = getToken();
-        this.setState({transList: []});
         if (!token) {
             this.props.history.push('/login');
         } else {
             this.setState({ isLoading: true })
-            let startDateStr = this.state.startDate ? this.state.startDate.toISOString().replace('T', ' ').slice(0,-5) :  new Date("2019-01-01T01:00:00Z");
-            let endDateStr = this.state.endDate ? this.state.endDate.toISOString().replace('T', ' ').slice(0,-5) : new Date();
+            let startDateStr = this.state.startDate ? this.state.startDate.toISOString().replace('T', ' ').slice(0, -5) : new Date("2019-01-01T01:00:00Z");
+            let endDateStr = this.state.endDate ? this.state.endDate.toISOString().replace('T', ' ').slice(0, -5) : new Date();
             axios.get(`https://mlffts-api.herokuapp.com/transaction?status=1&date_from=${startDateStr}&date_to=${endDateStr}&limit=2&offset=${this.state.transList.length}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(res => {
@@ -146,6 +147,10 @@ class Home extends React.Component {
                 }
             })
         }
+    }
+
+    search = () => {
+        this.setState({ transList: [] }, () => { this.loadSearch(); });
     }
 
     logout = () => {
@@ -172,6 +177,7 @@ class Home extends React.Component {
             headers: { Authorization: `Bearer ${token}` }
         }).then(res => {
             let options = res.data.map((item, i) => ({ value: item.license_number, label: item.license_number }));
+            console.log(res.data)
             this.setState({ license_list: options })
         }
         ).catch(err => {
@@ -185,6 +191,15 @@ class Home extends React.Component {
                 // this.setState({ isLoading: false })
             }
         })
+
+    }
+
+    loadMore = () => {
+        if (this.state.isSearchMode) {
+            this.loadSearch();
+        } else {
+            this.loadData();
+        }
 
     }
 
@@ -250,6 +265,38 @@ class Home extends React.Component {
             })
         }
     }
+
+    // loadPDFMonth = () => {
+    //     const token = getToken();
+    //     if (!token) {
+    //         this.props.history.push('/login');
+    //     } else {
+    //         axios.get(`https://mlffts-api.herokuapp.com/transaction/gen?date_from=${id}`, {
+    //             responseType: 'blob',
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         }).then(res => {
+    //             const file = new Blob(
+    //                 [res.data],
+    //                 { type: 'application/pdf' });
+
+    //             const fileURL = URL.createObjectURL(file);
+
+    //             window.open(fileURL);
+    //         }
+    //         ).catch(err => {
+    //             // alert(err);
+    //             console.log(err);
+    //             if (err.response) {
+    //                 console.log(err.response)
+    //                 // if (err.response.status === 500) {
+    //                 //     // not verify email
+
+    //                 // }
+    //                 // this.setState({ isLoading: false })
+    //             }
+    //         })
+    //     }
+    // }
 
     render() {
         if (this.state.user === undefined) {
@@ -334,7 +381,7 @@ class Home extends React.Component {
                                             <div className="column is-3 is-hidden-mobile">
                                                 <div className="search-container">
                                                     <div className="has-text-centered add-btm-padding ">
-                                                        <h1 className={`title ${this.props.lang === 'en' ? 'is-4' : 'is-4'} is-size-3-widescreen home-title`}><Lang lang={this.props.lang} en='Transaction' th="ประวัติค่าผ่านทาง" /></h1>
+                                                        <h1 className={`title ${this.props.lang === 'en' ? 'is-5' : 'is-5'} is-size-4-widescreen home-title`}><Lang lang={this.props.lang} en='Transaction' th="ประวัติค่าผ่านทาง" /></h1>
                                                     </div>
                                                     <div className="has-text-centered ">
                                                         <div className="my-datepicker-container">
@@ -362,7 +409,7 @@ class Home extends React.Component {
                                                             />
                                                         </div>
 
-                            <br/>
+                                                        <br />
                                                         {/* <hr className="my-hr" /> */}
 
                                                         <div className="entry-select-container ">
@@ -395,7 +442,7 @@ class Home extends React.Component {
                                                     <div className="box">
 
                                                         <div className="has-text-centered add-btm-padding ">
-                                                            <h1 className={`title ${this.props.lang === 'en' ? 'is-4' : 'is-4'} is-size-3-widescreen home-title`}><Lang lang={this.props.lang} en='Monthly Transaction' th="ประวัติค่าผ่านทางรายเดือน" /></h1>
+                                                            <h1 className={`title ${this.props.lang === 'en' ? 'is-5' : 'is-5'} is-size-4-widescreen home-title`}><Lang lang={this.props.lang} en='Monthly Transaction' th="ประวัติค่าผ่านทางรายเดือน" /></h1>
 
                                                             <div className="entry-select-container ">
 
