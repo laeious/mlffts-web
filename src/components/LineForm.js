@@ -1,34 +1,23 @@
 import React from 'react';
 import axios from 'axios';
 import qs from 'qs';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Lang from '../helpers/Lang';
 
 class LineForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userForm: {
-        username: '',
-        password: '',
-        comfirmPassword: '',
-        name: '',
-        lastName: '',
+        firstname: '',
+        lastname: '',
         citizen_id: '',
-        email: '',
-        license: '',
-        province: '',
         e_code: '',
       },
       errors: {
-        username: '',
-        password: '',
-        comfirmPassword: '',
-        name: '',
-        lastName: '',
+        firstname: '',
+        lastname: '',
         citizen_id: '',
-        email: '',
-        license: '',
-        province: '',
         e_code: ''
       },
       checkNull: true,
@@ -51,26 +40,31 @@ class LineForm extends React.Component {
     const { name, value } = e.target;
     let errors = this.state.errors;
     let userForm = this.state.userForm;
-    
-    if (name === 'name') {
-      userForm.name = value
-      errors.name = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
-    } else if (name === 'lastName') {
-      userForm.lastName = value
-      errors.lastName = !this.validateName(value) ? 'A-Z or ก-ฮ' : '';
+
+    if (name === 'firstname') {
+      userForm.firstname = value
+      errors.firstname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
+    } else if (name === 'lastname') {
+      userForm.lastname = value
+      errors.lastname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
     } else if (name === 'citizen_id') {
       userForm.citizen_id = value
-      errors.citizen_id = !this.validateCitizenID(value) ? 'Number 13 digits' : '';
-    } else if (name === 'email') {
-      userForm.email = value
-      errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
+      if (this.props.lang === 'en') {
+        errors.citizen_id = !this.validateCitizenID(value) ? 'Invalid Citizen ID' : '';
+      } else {
+        errors.citizen_id = !this.validateCitizenID(value) ? 'รหัสประชาชนไม่ถูกต้อง' : '';
+      }
     } else if (name === 'e_code') {
       userForm.e_code = value
+      if (this.props.lang === 'en') {
+        errors.e_code = !this.validateEcode(value) ? 'Invalid E_code' : '';
+      } else {
+        errors.e_code = !this.validateEcode(value) ? 'E_code ไม่ถูกต้อง' : '';
+      }
     }
 
     let checkNull = false;
     for (let i in userForm) {
-      console.log(i)
       if (userForm[i] === '') {
         checkNull = true;
       }
@@ -91,10 +85,10 @@ class LineForm extends React.Component {
     event.preventDefault();
     const userForm = this.state.userForm;
     const reqBody = {
-      firstname: userForm.name,
-      lastName: userForm.lastName,
+      line_id: this.props.user.line_id,
+      firstname: userForm.firstname,
+      lastname: userForm.lastname,
       citizen_id: userForm.citizen_id,
-      email: userForm.email,
       e_code: userForm.e_code,
     }
 
@@ -108,16 +102,19 @@ class LineForm extends React.Component {
 
     axios.post('https://mlffts-api.herokuapp.com/register', qs.stringify(reqBody), config).then(
       res => {
-        this.setState({isLoading: false})
+        console.log(res.data)
+        // this.setState({ isLoading: false })
       }).catch(err => {
-        console.log('error ja')
         console.log(err)
+        if (err.response) {
+          console.log(err.response.data)
+      }
       })
 
   }
 
   validateCitizenID = (user) => {
-    let re = /^[0-9]*$/;
+    let re = /^(\d{13})$/;
     return re.test(String(user));
   }
 
@@ -132,22 +129,37 @@ class LineForm extends React.Component {
     return re.test(String(email).toLowerCase());
   }
 
+  validateEcode= (user) => {
+    let re = /^(\d{10})$/;
+    return re.test(String(user));
+  }
 
   render() {
     let errors = this.state.errors;
     return (
       <div className="navbar-space">
-         <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
-           <div className="navbar-brand">
-                    <Link to="/">
-                        <div className="navbar-item">
-                            <h1 className="title logo-nav"  onClick={() => window.location.reload()}>
-                                MLFFTS
+        <nav className="navbar  is-fixed-top has-background-grey-darker" role="navigation" aria-label="main navigation">
+          <div className="navbar-brand">
+            <Link to="/">
+              <div className="navbar-item">
+                <h1 className="title logo-nav" onClick={() => window.location.reload()}>
+                  MLFFTS
                         </h1>
-                        </div>
-                    </Link>
-                </div>
-            {/* <div className="navbar-menu">
+              </div>
+            </Link>
+          </div>
+          <div className="navbar-end">
+            <div className="navbar-item has-text-white has-border-left">
+              <span id="th-button" className={this.props.lang === 'th' ? 'lang-active' : ''}
+                onClick={this.props.toggleLang}
+              >TH </span>
+                                        /
+                                        <span id="en-button" className={this.props.lang === 'en' ? 'lang-active' : ''}
+                onClick={this.props.toggleLang}
+              > EN</span>
+            </div>
+          </div>
+          {/* <div className="navbar-menu">
                 <div className="navbar-end">
                     <div className="navbar-item">
                         <div className="buttons">
@@ -163,114 +175,114 @@ class LineForm extends React.Component {
             </div> */}
         </nav>
 
-      <div className="section" style={{ padding: "1rem 1.5rem" }}>
-        <div className="contianer">
-          {/* <div className="topic">
+        <div className="section" style={{ padding: "1rem 1.5rem" }}>
+          <div className="contianer">
+            {/* <div className="topic">
             <h2 className="title is-1">Register</h2>
           </div> */}
 
-          <div className="columns is-centered">
-            <div className="column  is-half is-12-moible is-10-tablet is-6-widescreen ">
-              <div className="register box">
-                <div className=" container">
+            <div className="columns is-centered">
+              <div className="column  is-half is-12-moible is-10-tablet is-6-widescreen ">
+                <div className="register box">
+                  <div className=" container">
 
-                  <h3 className="title is-2 has-text-centered">Please fill the form</h3>
+                    <h3 className="title is-2 has-text-centered Sarabun"><Lang lang={this.props.lang} en="Please fill the form" th="กรุณากรอกแบบฟอร์ม" /></h3>
 
-                  <hr />
+                    <hr />
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Name</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="name"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.name} />
-                          {errors.name.length > 0 && <span className='error'>{errors.name}</span>}
+                    <div className="field is-horizontal">
+                      <div className="field-label is-normal">
+                        <label className=" "><Lang lang={this.props.lang} en="First Name" th="ชื่อ" /></label>
+                      </div>
+                      <div className="field-body">
+                        <div className="field">
+                          <div className="control">
+                            <input className="input" type="text" placeholder=""
+                              name="firstname"
+                              placeholder=""
+                              onChange={this.handleChange}
+                              value={this.state.userForm.name} />
+                            {errors.firstname.length > 0 && <span className='error'>{errors.firstname}</span>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Lastname</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="lastName"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.lastName} />
-                          {errors.lastName.length > 0 && <span className='error'>{errors.lastName}</span>}
+                    <div className="field is-horizontal">
+                      <div className="field-label is-normal">
+                        <label className=" "><Lang lang={this.props.lang} en="Last Name" th="นามสกุล" /></label>
+                      </div>
+                      <div className="field-body">
+                        <div className="field">
+                          <div className="control">
+                            <input className="input" type="text" placeholder=""
+                              name="lastname"
+                              placeholder=""
+                              onChange={this.handleChange}
+                              value={this.state.userForm.lastname} />
+                            {errors.lastname.length > 0 && <span className='error'>{errors.lastname}</span>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">Citizen ID</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="citizen_id"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.citizen_id} />
-                          {errors.citizen_id.length > 0 && <span className='error'>{errors.citizen_id}</span>}
+                    <div className="field is-horizontal">
+                      <div className="field-label is-normal">
+                        <label className=" "><Lang lang={this.props.lang} en="Citizen ID" th="รหัสประชาชน" /></label>
+                      </div>
+                      <div className="field-body">
+                        <div className="field">
+                          <div className="control">
+                            <input className="input" type="text" placeholder=""
+                              name="citizen_id"
+                              placeholder=""
+                              onChange={this.handleChange}
+                              value={this.state.userForm.citizen_id} />
+                            {errors.citizen_id.length > 0 && <span className='error'>{errors.citizen_id}</span>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="field is-horizontal">
-                    <div className="field-label is-normal">
-                      <label className=" ">E_code</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field">
-                        <div className="control">
-                          <input className="input" type="text" placeholder=""
-                            name="e_code"
-                            placeholder=""
-                            onChange={this.handleChange}
-                            value={this.state.userForm.e_code} />
-                          {errors.e_code.length > 0 && <span className='error'>{errors.e_code}</span>}
+                    <div className="field is-horizontal">
+                      <div className="field-label is-normal">
+                        <label className=" ">E_code</label>
+                      </div>
+                      <div className="field-body">
+                        <div className="field">
+                          <div className="control">
+                            <input className="input" type="text" placeholder=""
+                              name="e_code"
+                              placeholder=""
+                              onChange={this.handleChange}
+                              value={this.state.userForm.e_code} />
+                            {errors.e_code.length > 0 && <span className='error'>{errors.e_code}</span>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
-                    <p className="control">
-                      <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
-                        Submit
+                    <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
+                      <p className="control">
+                        <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                          Submit
                     </button>
-                    </p>
-                    <p className="control">
-                      <button className="button is-light">
-                        Cancel
+                      </p>
+                      <p className="control">
+                        <button className="button is-light">
+                          Cancel
                     </button>
-                    </p>
-                  </div>
+                      </p>
+                    </div>
 
+                  </div>
                 </div>
+
               </div>
 
             </div>
-
           </div>
         </div>
-      </div>
       </div>
 
 

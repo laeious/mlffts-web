@@ -239,6 +239,8 @@ class Home extends React.Component {
                     if (err.response.status === 500) {
                         // not verify email
                         this.setState({ noMoreData: true })
+                    }else if (err.response.status === 404) {
+                        this.setState({isNotFound: true, noMoreData:true})
                     }
                     this.setState({ isLoading: false })
                 }

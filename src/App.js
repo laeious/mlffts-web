@@ -4,7 +4,7 @@ import './App.css';
 import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
-import { Switch, Route,  BrowserRouter as Router } from 'react-router-dom'
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 import Line from './components/Line';
 import Notify from './components/Notify'
 import Verify from './components/Verify'
@@ -35,23 +35,23 @@ class App extends React.Component {
       this.setState({ lang: 'en' })
     }
   }
-  
+
 
   render() {
 
     return (
-        <Router>
-          <Switch>
-            <Route path="/verify" render={(props) => <Verify {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
-            {/* <Route path="/admin" component={Admin} /> */}
-            <Route path="/noti" component={Notify} />
-            <Route path="/register" render={(props) => <Register {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
-            {/* <Route path="/profile" component={Profile} /> */}
-            <Route path="/line" component={Line} />
-            <Route path="/login" render={(props) => <Login {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
-            <Route path="/" render={(props) => <Home {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
-          </Switch>
-        </Router>
+      <Router>
+        <Switch>
+          <Route path="/verify" render={(props) => <Verify {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+          {/* <Route path="/admin" component={Admin} /> */}
+          <Route path="/noti" component={Notify} />
+          <Route path="/register" render={(props) => <Register {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+          {/* <Route path="/profile" component={Profile} /> */}
+          <Route path="/line" render={(props) => <Line {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+          <Route path="/login" render={(props) => <Login {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+          <Route path="/" render={(props) => <Home {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+        </Switch>
+      </Router>
     );
   }
 }

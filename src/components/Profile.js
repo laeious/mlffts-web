@@ -62,7 +62,7 @@ class Profile extends React.Component {
     } else if (name === 'email') {
       userForm.email = value
       errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-    }  else if (name === 'e_code') {
+    } else if (name === 'e_code') {
       userForm.e_code = value
     }
 
@@ -83,7 +83,7 @@ class Profile extends React.Component {
 
     console.log(checkNull)
     console.log(userForm)
-    this.setState({ user:userForm, errors, checkNull, checkErrors })
+    this.setState({ user: userForm, errors, checkNull, checkErrors })
   }
 
   submit(event) {
@@ -93,12 +93,12 @@ class Profile extends React.Component {
       firstname: userForm.firstname,
       lastname: userForm.lastname,
       citizen_id: userForm.citizen_id,
-      email: userForm.email,
+      email: this.state.user.line_id ? null : userForm.email,
       // e_code: userForm.e_code,
-      // access_token: this.state.isCancel ? null : userForm.access_token
+      access_token: this.state.isCancel ? null : userForm.access_token
     }
     console.log(reqBody)
-    
+
     const token = getToken();
     const config = {
       headers: {
@@ -148,7 +148,7 @@ class Profile extends React.Component {
   }
 
   cancelLineNoti = () => {
-    this.setState({isCancel: true})
+    this.setState({ isCancel: true })
   }
 
   render() {
@@ -175,7 +175,7 @@ class Profile extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="First Name" th="ชื่อ"/></label>
+                        <label className=" "><Lang lang={this.props.lang} en="First Name" th="ชื่อ" /></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -193,7 +193,7 @@ class Profile extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Last Name" th="นามสกุล"/></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Last Name" th="นามสกุล" /></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -211,7 +211,7 @@ class Profile extends React.Component {
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Citizen ID" th="รหัสประชาชน"/></label>
+                        <label className=" "><Lang lang={this.props.lang} en="Citizen ID" th="รหัสประชาชน" /></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
@@ -220,31 +220,31 @@ class Profile extends React.Component {
                               name="citizen_id"
                               placeholder=""
                               onChange={this.handleChange}
-                              value={this.state.user.citizen_id} 
-                              readOnly/>
+                              value={this.state.user.citizen_id}
+                              readOnly />
                             {errors.citizen_id.length > 0 && <span className='error'>{errors.citizen_id}</span>}
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    <div className="field is-horizontal">
-                      <div className="field-label is-normal">
-                        <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล"/></label>
-                      </div>
-                      <div className="field-body">
-                        <div className="field">
-                          <div className="control">
-                            <input className="input" type="text" placeholder=""
-                              name="email"
-                              placeholder=""
-                              onChange={this.handleChange}
-                              value={this.state.user.email} />
-                            {errors.email.length > 0 && <span className='error'>{errors.email}</span>}
+                    { !this.state.user.line_id &&
+                      <div className="field is-horizontal">
+                        <div className="field-label is-normal">
+                          <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล" /></label>
+                        </div>
+                        <div className="field-body">
+                          <div className="field">
+                            <div className="control">
+                              <input className="input" type="text" placeholder=""
+                                name="email"
+                                placeholder=""
+                                onChange={this.handleChange}
+                                value={this.state.user.email} />
+                              {errors.email.length > 0 && <span className='error'>{errors.email}</span>}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
+                      </div>}
 
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
@@ -272,7 +272,7 @@ class Profile extends React.Component {
                         {
                           (this.state.user.access_token && !this.state.isCancel) ?
                             <button className="button is-danger is-outlined" onClick={this.cancelLineNoti}>
-                              <span><Lang lang={this.props.lang} en="Cancel Line Notify" th="ยกเลิก Line Notify"/></span>
+                              <span><Lang lang={this.props.lang} en="Cancel Line Notify" th="ยกเลิก Line Notify" /></span>
                               <span className="icon is-small">
                                 <i className="fas fa-times"></i>
                               </span>
@@ -281,7 +281,7 @@ class Profile extends React.Component {
                             // <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify">
                             <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=https://mlffts-web.herokuapp.com/noti&state=12345abcde&scope=notify">
                               <button className="button line-noti-btn is-outlined">
-                                <span><Lang lang={this.props.lang} en="Get Line Notify" th="ใช้ Line Notify"/></span>
+                                <span><Lang lang={this.props.lang} en="Get Line Notify" th="ใช้ Line Notify" /></span>
                               </button>
                             </a>
 
@@ -304,14 +304,14 @@ class Profile extends React.Component {
                     <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                       <p className="control">
                         <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
-                         <Lang lang={this.props.lang} en="Save changes" th="บันทึก" />
-                    </button>
+                          <Lang lang={this.props.lang} en="Save changes" th="บันทึก" />
+                        </button>
                       </p>
                       <p className="control">
                         <button className="button is-light">
                           <a href="/">
                             <Lang lang={this.props.lang} en="Cancel" th="ยกเลิก" />
-                        </a>
+                          </a>
                         </button>
                       </p>
                     </div>
