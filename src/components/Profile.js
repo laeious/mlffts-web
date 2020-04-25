@@ -36,7 +36,8 @@ class Profile extends React.Component {
       hidePassword: true,
       duplicateUser: false,
       duplicateEmail: false,
-      duplicateLicense: false
+      duplicateLicense: false,
+      isCancel: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -90,11 +91,11 @@ class Profile extends React.Component {
     const userForm = this.state.user;
     const reqBody = {
       firstname: userForm.firstname,
-      lastname: userForm.lastmame,
+      lastname: userForm.lastname,
       citizen_id: userForm.citizen_id,
       email: userForm.email,
       // e_code: userForm.e_code,
-      access_token: userForm.access_token
+      // access_token: this.state.isCancel ? null : userForm.access_token
     }
     console.log(reqBody)
     
@@ -115,6 +116,13 @@ class Profile extends React.Component {
       }).catch(err => {
         console.log('error ja')
         console.log(err)
+        if (err.response) {
+          console.log(err.response.data);
+          console.log((err.response));
+
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
       })
 
   }
@@ -137,6 +145,10 @@ class Profile extends React.Component {
 
   addLineNoti = () => {
     window.open("https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify");
+  }
+
+  cancelLineNoti = () => {
+    this.setState({isCancel: true})
   }
 
   render() {
@@ -208,7 +220,8 @@ class Profile extends React.Component {
                               name="citizen_id"
                               placeholder=""
                               onChange={this.handleChange}
-                              value={this.state.user.citizen_id} />
+                              value={this.state.user.citizen_id} 
+                              readOnly/>
                             {errors.citizen_id.length > 0 && <span className='error'>{errors.citizen_id}</span>}
                           </div>
                         </div>
@@ -257,11 +270,11 @@ class Profile extends React.Component {
                       </div>
                       <div className="field-body">
                         {
-                          this.state.user.access_token ?
-                            <button class="button is-danger is-outlined">
+                          (this.state.user.access_token && !this.state.isCancel) ?
+                            <button className="button is-danger is-outlined" onClick={this.cancelLineNoti}>
                               <span><Lang lang={this.props.lang} en="Cancel Line Notify" th="ยกเลิก Line Notify"/></span>
-                              <span class="icon is-small">
-                                <i class="fas fa-times"></i>
+                              <span className="icon is-small">
+                                <i className="fas fa-times"></i>
                               </span>
                             </button>
                             :

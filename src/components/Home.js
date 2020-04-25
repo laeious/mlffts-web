@@ -36,34 +36,37 @@ class Home extends React.Component {
             noMoreData: false,
             license_list: [],
             isSearchMode: false,
-            isFound: false,
+            isNotFound: false,
+            monthSelected: null,
+            lpSelected: null,
+            showLpSelect: false,
             months_th: [
-                { value: 1, label: 'มกราคม' },
-                { value: 2, label: 'กุมภาพันธ์' },
-                { value: 3, label: 'มีนาคม' },
-                { value: 4, label: 'เมษายน' },
-                { value: 5, label: 'พฤษภาคม' },
-                { value: 6, label: 'มิถุนายน' },
-                { value: 7, label: 'กรกฎาคม' },
-                { value: 8, label: 'สิงหาคม' },
-                { value: 9, label: 'กันยายน' },
-                { value: 10, label: 'ตุลาคม' },
-                { value: 11, label: 'พฤศจิกายน' },
-                { value: 12, label: 'ธันวาคม' },
+                // { value: 1, label: 'มกราคม' },
+                // { value: 2, label: 'กุมภาพันธ์' },
+                // { value: 3, label: 'มีนาคม' },
+                { value: '04/20', label: 'เมษายน 2563' },
+                // { value: 5, label: 'พฤษภาคม' },
+                // { value: 6, label: 'มิถุนายน' },
+                // { value: 7, label: 'กรกฎาคม' },
+                // { value: 8, label: 'สิงหาคม' },
+                // { value: 9, label: 'กันยายน' },
+                // { value: 10, label: 'ตุลาคม' },
+                // { value: 11, label: 'พฤศจิกายน' },
+                // { value: 12, label: 'ธันวาคม' },
             ],
             months_en: [
-                { value: 1, label: 'January' },
-                { value: 2, label: 'February' },
-                { value: 3, label: 'March' },
-                { value: 4, label: 'April' },
-                { value: 5, label: 'May' },
-                { value: 6, label: 'June' },
-                { value: 7, label: 'July' },
-                { value: 8, label: 'August' },
-                { value: 9, label: 'September' },
-                { value: 10, label: 'October' },
-                { value: 11, label: 'November' },
-                { value: 12, label: 'December' },
+                // { value: 1, label: 'January' },
+                // { value: 2, label: 'February' },
+                // { value: 3, label: 'March' },
+                { value: '04/20', label: 'April 2020' },
+                // { value: 5, label: 'May' },
+                // { value: 6, label: 'June' },
+                // { value: 7, label: 'July' },
+                // { value: 8, label: 'August' },
+                // { value: 9, label: 'September' },
+                // { value: 10, label: 'October' },
+                // { value: 11, label: 'November' },
+                // { value: 12, label: 'December' },
             ]
         }
     }
@@ -142,6 +145,8 @@ class Home extends React.Component {
                     if (err.response.status === 500) {
                         // not verify email
                         this.setState({ noMoreData: true })
+                    } else if (err.response.status === 404) {
+                        this.setState({ isNotFound: true })
                     }
                     this.setState({ isLoading: false })
                 }
@@ -150,7 +155,11 @@ class Home extends React.Component {
     }
 
     search = () => {
-        this.setState({ transList: [] }, () => { this.loadSearch(); });
+        this.setState({ transList: [], isNotFound: false, isSearchMode: true }, () => { this.loadSearch(); });
+    }
+
+    clearSearch = () => {
+        this.setState({ transList: [], isSearchMode: false, isNotFound:false }, () => { this.loadData(); })
     }
 
     logout = () => {
@@ -176,7 +185,7 @@ class Home extends React.Component {
         axios.get(`https://mlffts-api.herokuapp.com/lpinfo`, {
             headers: { Authorization: `Bearer ${token}` }
         }).then(res => {
-            let options = res.data.map((item, i) => ({ value: item.license_number, label: item.license_number }));
+            let options = res.data.map((item, i) => ({ value: item.license_number, label: item.license_number, id: item.id }));
             console.log(res.data)
             this.setState({ license_list: options })
         }
@@ -209,9 +218,12 @@ class Home extends React.Component {
             this.props.history.push('/login');
         } else {
             this.setState({ isLoading: true })
-            axios.get(`https://mlffts-api.herokuapp.com/transaction?limit=2&offset=${this.state.transList.length}`, {
+            axios.get(`https://mlffts-api.herokuapp.com/transaction?limit=6&offset=${this.state.transList.length}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(res => {
+                if (this.state.transList.length == 0 && res.data.data.length <= 6) {
+                    this.setState({ noMoreData: true })
+                }
                 let oldData = this.state.transList;
                 let allData = oldData.concat(res.data.data)
                 if (res.data.data.length === 0) {
@@ -266,37 +278,60 @@ class Home extends React.Component {
         }
     }
 
-    // loadPDFMonth = () => {
-    //     const token = getToken();
-    //     if (!token) {
-    //         this.props.history.push('/login');
-    //     } else {
-    //         axios.get(`https://mlffts-api.herokuapp.com/transaction/gen?date_from=${id}`, {
-    //             responseType: 'blob',
-    //             headers: { Authorization: `Bearer ${token}` }
-    //         }).then(res => {
-    //             const file = new Blob(
-    //                 [res.data],
-    //                 { type: 'application/pdf' });
+    monthSelect = selected => {
+        this.setState({ monthSelected: selected });
+    }
 
-    //             const fileURL = URL.createObjectURL(file);
+    lpSelect = selected => {
+        this.setState({ lpSelected: selected });
+    }
 
-    //             window.open(fileURL);
-    //         }
-    //         ).catch(err => {
-    //             // alert(err);
-    //             console.log(err);
-    //             if (err.response) {
-    //                 console.log(err.response)
-    //                 // if (err.response.status === 500) {
-    //                 //     // not verify email
+    loadPDFMonth = () => {
+        console.log(this.state.monthSelected, this.state.lpSelected)
+        if (!this.state.lpSelected) {
 
-    //                 // }
-    //                 // this.setState({ isLoading: false })
-    //             }
-    //         })
-    //     }
-    // }
+        }
+        if (this.state.monthSelected && this.state.lpSelected) {
+            const token = getToken();
+            if (!token) {
+                this.props.history.push('/login');
+            } else {
+                const monthYear = this.state.monthSelected.value;
+                const month = monthYear.slice(0, 2);
+                const nextMonth = month === '12' ? '01' : (parseInt(month, 10) + 101).toString().substr(1);
+                const year = monthYear.slice(3, 5);
+                const start = `20${year}-${month}-01 00:00:00`
+                const end = `20${year}-${nextMonth}-01 00:00:00`
+
+                console.log(start, end)
+
+                axios.get(`https://mlffts-api.herokuapp.com/transaction/gen?date_from=${start}&date_to${end}&lp_id=${this.state.lpSelected.id}`, {
+                    responseType: 'blob',
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(res => {
+                    const file = new Blob(
+                        [res.data],
+                        { type: 'application/pdf' });
+
+                    const fileURL = URL.createObjectURL(file);
+
+                    window.open(fileURL);
+                }
+                ).catch(err => {
+                    // alert(err);
+                    console.log(err);
+                    if (err.response) {
+                        console.log(err.response)
+                        // if (err.response.status === 500) {
+                        //     // not verify email
+
+                        // }
+                        // this.setState({ isLoading: false })
+                    }
+                })
+            }
+        }
+    }
 
     render() {
         if (this.state.user === undefined) {
@@ -377,7 +412,6 @@ class Home extends React.Component {
                                             <div className="column is-3 is-hidden-tablet">
                                                 {/* mobi */}
                                             </div>
-
                                             <div className="column is-3 is-hidden-mobile">
                                                 <div className="search-container">
                                                     <div className="has-text-centered add-btm-padding ">
@@ -432,7 +466,7 @@ class Home extends React.Component {
                                                     </div>
                                                     <div className="has-text-centered">
 
-                                                        <button className="button search-button Sarabun" onClick={this.search}>
+                                                        <button className="button search-button Sarabun has-text-white" onClick={this.search}>
                                                             <Lang lang={this.props.lang} en='Search' th="ค้นหา" />
                                                         </button>
                                                     </div>
@@ -454,13 +488,31 @@ class Home extends React.Component {
                                                                         options={this.props.lang === 'en' ? this.state.months_en : this.state.months_th}
                                                                         isClearable={true}
                                                                         isSearchable="false"
+                                                                        onChange={this.monthSelect}
+                                                                        value={this.state.monthSelected}
                                                                         placeholder={this.props.lang === 'en' ? 'Select Month' : 'เลือกเดือน'}
                                                                     />
                                                                 </div>
                                                             </div>
-                                                            <div className="has-text-centered">
+                                                            <br />
 
-                                                                <button className="button search-button Sarabun">
+                                                            {this.state.monthSelected ? <div className="entry-select-container ">
+                                                                <Lang lang={this.props.lang} en='Select Car' th="เลือกรถ" />:
+                                                            <div style={{ width: '200px' }}>
+                                                                    <Select
+                                                                        styles={styles}
+                                                                        options={this.state.license_list}
+                                                                        isClearable={true}
+                                                                        isSearchable="false"
+                                                                        onChange={this.lpSelect}
+                                                                        value={this.state.lpSelected}
+                                                                        placeholder={this.props.lang === 'en' ? 'Select Car' : 'เลือกรถ'}
+                                                                    />
+                                                                </div>
+                                                            </div> : null}
+
+                                                            <div className="has-text-centered">
+                                                                <button className="button search-button Sarabun has-text-white" onClick={this.loadPDFMonth}>
                                                                     <Lang lang={this.props.lang} en='Download' th="ดาวน์โหลด" />
                                                                 </button>
                                                             </div>
@@ -470,6 +522,14 @@ class Home extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="column is-7 ">
+                                                {this.state.isSearchMode && <div className="clear-button-box">
+                                                    <button className="button clear-button is-right" onClick={this.clearSearch}>
+                                                        <span><Lang lang={this.props.lang} en="Clear" th="ยกเลิก" /></span>
+                                                        <span className="icon is-small">
+                                                            <i className="fas fa-times " ></i>
+                                                        </span>
+                                                    </button>
+                                                </div>}
                                                 <div className="card-container" id="style-2">
                                                     {this.state.transList.map((item, i) => {
                                                         let time = new Date(item.last_update);
@@ -488,8 +548,15 @@ class Home extends React.Component {
 
                                                     <div className="columns is-centered" >
                                                         <div className="column is-10">
+                                                            {
+                                                                this.state.isNotFound ?
+                                                                    <div className="has-text-centered" style={{ marginTop: '10px' }}>
+                                                                        <Lang lang={this.props.lang} en={'Data Not Found'} th={'ไม่พบข้อมูล'} />
+                                                                    </div>
+                                                                    : null
+                                                            }
                                                             <div style={this.state.noMoreData ? { 'display': 'none' } : { 'display': 'block' }}>
-                                                                <button className={this.state.isLoading ? "button is-fullwidth is-loading more-btn" : "button more-btn is-fullwidth"}
+                                                                <button className={this.state.isLoading ? "button is-fullwidth is-loading has-text-white more-btn" : "button more-btn is-fullwidth"}
 
                                                                     onClick={this.loadData}
                                                                 >
@@ -511,6 +578,7 @@ class Home extends React.Component {
                                                     </button>
                                                 </ScrollToTop>
                                             </div>
+
                                         </div>
                                     </div>
                                 </Route>

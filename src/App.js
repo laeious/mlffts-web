@@ -6,8 +6,8 @@ import Login from './components/Login';
 import Home from './components/Home';
 import { Switch, Route,  BrowserRouter as Router } from 'react-router-dom'
 import Line from './components/Line';
-import Admin from './components/Admin'
 import Notify from './components/Notify'
+import Verify from './components/Verify'
 // class DebugRouter extends Router {
 //   constructor(props){
 //     super(props);
@@ -42,7 +42,8 @@ class App extends React.Component {
     return (
         <Router>
           <Switch>
-            <Route path="/admin" component={Admin} />
+            <Route path="/verify" render={(props) => <Verify {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
+            {/* <Route path="/admin" component={Admin} /> */}
             <Route path="/noti" component={Notify} />
             <Route path="/register" render={(props) => <Register {...props} lang={this.state.lang} toggleLang={this.handleToggleLang} />} />
             {/* <Route path="/profile" component={Profile} /> */}
