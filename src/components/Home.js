@@ -534,8 +534,9 @@ class Home extends React.Component {
                                                 </div>}
                                                 <div className="card-container" id="style-2">
                                                     {this.state.transList.map((item, i) => {
-                                                        let time = new Date(item.last_update);
-                                                        let timeString = time.toLocaleString();
+                                                        let startTime = new Date(item.last_update);
+                                                        startTime =   new Date( startTime.getTime() + ( startTime.getTimezoneOffset() * 60000 ) );
+                                                        let timeString = startTime.toLocaleString();
                                                         return <Card
                                                             key={item.id}
                                                             id={item.id}
