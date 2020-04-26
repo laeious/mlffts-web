@@ -47,7 +47,7 @@ export default (props) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState();
-    const [pageSize] = useState(2);
+    const [pageSize] = useState(10);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
     const [isModal, toggleModal] = useState(false);
@@ -270,8 +270,15 @@ export default (props) => {
             }
             ).catch((err) => {
                 console.log(err)
-                props.history.push('/login');
+                if (err.response) {
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    // console.log(err.response.headers);
+                }
+                // props.history.push('/login');
             });
+        }else if(!token){
+               props.history.push('/login');
         }
 
     }
