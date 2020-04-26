@@ -34,8 +34,8 @@ class Line extends React.Component {
             const reqBody = {
                 grant_type: 'authorization_code',
                 code: code,
-                // redirect_uri: 'https://mlffts-web.herokuapp.com/line',
-                redirect_uri: 'http://localhost:8080/line',
+                redirect_uri: 'https://mlffts-web.herokuapp.com/line',
+                // redirect_uri: 'http://localhost:8080/line',
                 client_id: '1653371073',
                 client_secret: '7126b5e12a628a6b38089fa4918cdbd2'
             }

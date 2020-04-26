@@ -28,6 +28,8 @@ class Profile extends React.Component {
         e_code_id: '',
         line_id: ''
       },
+      originalEcode: this.props.user.e_code_id,
+      errorEcode: this.props.user.e_code_id.map(el => true),
       checkNull: false,
       checkErrors: false,
       isLoading: false,
@@ -62,14 +64,11 @@ class Profile extends React.Component {
     } else if (name === 'email') {
       userForm.email = value
       errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-    } else if (name === 'e_code') {
-      userForm.e_code = value
-    }
+    } 
 
     let checkNull = false;
     for (let i in userForm) {
       if (userForm[i] === '') {
-        console.log(userForm[i])
         checkNull = true;
       }
     }
@@ -81,23 +80,119 @@ class Profile extends React.Component {
       }
     }
 
-    console.log(checkNull)
-    console.log(userForm)
     this.setState({ user: userForm, errors, checkNull, checkErrors })
   }
 
+  checkObjects = (id, list) => {
+    for(let i=0; i<list.length; i++){
+      if(list[i].e_code_id === id){
+        return true
+      }
+    }
+    return false
+  }
+
+  submitAdd = (e_code) => {
+
+    const reqBody = {
+      e_code: e_code
+    }
+    console.log(reqBody)
+
+    const token = getToken();
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    console.log('in add submit');
+
+    axios.post('https://mlffts-api.herokuapp.com/ecodemap/add', qs.stringify(reqBody), config).then(
+      res => {
+        console.log(res);
+        this.setState({ isLoading: false })
+      }).catch(err => {
+        console.log('error ja')
+        console.log(err)
+        if (err.response) {
+          console.log(err.response.data);
+          console.log((err.response));
+
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
+      })
+  }
+  
+  submitDelete = (id) => {
+    
+    const reqBody = {
+      e_code_id: id
+    }
+    console.log(reqBody)
+
+    const token = getToken();
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    console.log('in delete submit');
+
+    axios.post('https://mlffts-api.herokuapp.com/ecodemap/delete', qs.stringify(reqBody), config).then(
+      res => {
+        console.log(res);
+        this.setState({ isLoading: false })
+      }).catch(err => {
+        console.log('error ja')
+        console.log(err)
+        if (err.response) {
+          console.log(err.response.data);
+          console.log((err.response));
+
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
+      })
+  }
+
+  
   submit(event) {
     event.preventDefault();
+
+    let promises = [];
+
     const userForm = this.state.user;
     const reqBody = {
       firstname: userForm.firstname,
       lastname: userForm.lastname,
-      citizen_id: userForm.citizen_id,
-      email: this.state.user.line_id ? null : userForm.email,
-      // e_code: userForm.e_code,
-      access_token: this.state.isCancel ? null : userForm.access_token
+      email: this.state.user.line_id ? null : userForm.email
     }
     console.log(reqBody)
+
+ 
+    console.log(this.state.originalEcode);
+    console.log(this.state.user.e_code_id);
+    let oldE = this.state.originalEcode;
+    let newE = this.state.user.e_code_id
+
+    for(let i=0; i<oldE.length; i++){
+      let check = this.checkObjects(oldE[i].e_code_id, newE)
+      if(!check){
+        this.submitDelete(oldE[i].e_code_id);
+      }
+    }
+
+    for(let i=0; i<newE.length; i++){
+      if(newE[i].e_code_id === null){
+        this.submitAdd(newE[i].e_code)
+      }
+    }
+
 
     const token = getToken();
     const config = {
@@ -149,6 +244,70 @@ class Profile extends React.Component {
 
   cancelLineNoti = () => {
     this.setState({ isCancel: true })
+        
+    const reqBody = {
+      access_token: null
+    }
+    console.log(reqBody)
+
+    const token = getToken();
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    axios.post('https://mlffts-api.herokuapp.com/notify/update ', qs.stringify(reqBody), config).then(
+      res => {
+        console.log(res);
+        this.setState({ isLoading: false })
+      }).catch(err => {
+        console.log('error ja')
+        console.log(err)
+        if (err.response) {
+          console.log(err.response.data);
+          console.log((err.response));
+
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
+      })
+
+  }
+
+  validateEcode = (user) => {
+    let re = /^(\d{10})$/;
+    if(user === ''){ return true }
+    return re.test(String(user));
+  }
+
+  addECode = () => {
+    let e_code_id = [...this.state.user.e_code_id, {e_code_id: null,e_code:''}];
+    let errorEcode = e_code_id.map(el => { return this.validateEcode(el.e_code)})
+    this.setState(prevState => ({ user: {...prevState.user, e_code_id}, errorEcode}))
+  }
+
+  deleteECode = (i) => {
+    let e_code_id = [...this.state.user.e_code_id];
+    e_code_id.splice(i,1);
+    this.setState({ user: {...this.state.user, e_code_id} });
+  }
+
+  ECodeHandle = (i, event) => {
+    let e_code_id = [...this.state.user.e_code_id];
+    e_code_id[i].e_code = event.target.value;
+    let errorEcode = e_code_id.map(el => {return this.validateEcode(el.e_code)})
+    let checkErrors = false;
+
+    for (let i in errorEcode) {
+      if (!errorEcode[i]) {
+        checkErrors = true;
+      }
+    }
+    
+    
+    this.setState({  user: {...this.state.user, e_code_id} , errorEcode, checkErrors});
   }
 
   render() {
@@ -158,6 +317,10 @@ class Profile extends React.Component {
     if (!this.state.user) {
       return null
     }
+
+    console.log(this.state.user.e_code_id)
+
+    let checkEcodeEmpty = (this.state.user.e_code_id.length === 1  && this.state.user.e_code_id[0].e_code === '');
 
 
     return (
@@ -227,7 +390,7 @@ class Profile extends React.Component {
                         </div>
                       </div>
                     </div>
-                    { !this.state.user.line_id &&
+                    {!this.state.user.line_id &&
                       <div className="field is-horizontal">
                         <div className="field-label is-normal">
                           <label className=" "><Lang lang={this.props.lang} en="Email" th="อีเมล" /></label>
@@ -246,19 +409,104 @@ class Profile extends React.Component {
                         </div>
                       </div>}
 
-                    <div className="field is-horizontal">
+
+                    {
+                      this.state.user.e_code_id.map((el, i) => {
+                        if(this.state.user.e_code_id.length === 1) {
+                          return (
+                            <div className="field is-horizontal" key={i}>
+                              <div className="field-label is-normal">
+                                <label className=" ">E_code</label>
+                              </div>
+                              <div className="field-body">
+                                <div className="field  has-addons">
+                                  <div className="control is-expanded">
+                                    <input className="input" type="text" placeholder=""
+                                      name="e_code_id"
+                                      placeholder=""
+                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      value={el.e_code} />
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        if (i === 0 && this.state.user.e_code_id.length > 1) {
+                          return (
+                            <div className="field is-horizontal" key={i}>
+                              <div className="field-label is-normal">
+                                <label className=" ">E_code</label>
+                              </div>
+                              <div className="field-body">
+                                <div className="field  has-addons">
+                                  <div className="control is-expanded">
+                                    <input className="input" type="text" placeholder=""
+                                      name="e_code_id"
+                                      placeholder=""
+                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      value={el.e_code} />
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                  </div>
+                                  <div className="control">
+                                    <a className="button is-danger" onClick={this.deleteECode.bind(this, i)}>
+                                      <span className="icon is-small">
+                                        <i className="fas fa-times " ></i>
+                                      </span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        } else {
+                          return (
+                            <div className="field is-horizontal" key={i}>
+                              <div className="field-label is-normal">
+                                <label className=" "></label>
+                              </div>
+                              <div className="field-body">
+                                <div className="field  has-addons">
+                                  <div className="control is-expanded">
+                                    <input className="input" type="text" placeholder=""
+                                      name="e_code_id"
+                                      placeholder=""
+                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      value={el.e_code} />
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                  </div>
+                                  <div className="control">
+                                    <a className="button is-danger" onClick={this.deleteECode.bind(this, i)}>
+                                      <span className="icon is-small">
+                                        <i className="fas fa-times " ></i>
+                                      </span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+
+
+                      })
+                    }
+
+
+
+
+                    <div className="field  is-horizontal" >
                       <div className="field-label is-normal">
-                        <label className=" ">E_code</label>
+                        <label className=" "></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
                           <div className="control">
-                            <input className="input" type="text" placeholder=""
-                              name="e_code_id"
-                              placeholder=""
-                              onChange={this.handleChange}
-                              value={this.state.user.e_code_id} />
-                            {errors.e_code_id.length > 0 && <span className='error'>{errors.e_code_id}</span>}
+                            <button className="button is-fullwidth is-light" onClick={this.addECode} disabled={!this.validateEcode(this.state.user.e_code_id[this.state.user.e_code_id.length-1].e_code) || this.state.user.e_code_id[this.state.user.e_code_id.length-1].e_code === ''}>
+                              <span className="icon is-small"><i className="fas fa-plus-circle"></i></span>
+                              <span><Lang lang={this.props.lang} en="Add E_code" th="เพิ่ม E_code" /></span>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -300,10 +548,9 @@ class Profile extends React.Component {
                       </div>
                     </div> */}
                     </div>
-
                     <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                       <p className="control">
-                        <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                        <button className="button is-dark" disabled={this.state.checkNull || this.state.checkErrors || checkEcodeEmpty} onClick={this.submit}>
                           <Lang lang={this.props.lang} en="Save changes" th="บันทึก" />
                         </button>
                       </p>

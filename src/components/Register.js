@@ -18,7 +18,7 @@ class Register extends React.Component {
         lastname: '',
         citizen_id: '',
         email: '',
-        e_code: '',
+        e_code: [''],
       },
       errors: {
         username: '',
@@ -28,8 +28,8 @@ class Register extends React.Component {
         lastname: '',
         citizen_id: '',
         email: '',
-        e_code: ''
       },
+      errorEcode: [true],
       checkNull: true,
       checkErrors: false,
       isLoading: false,
@@ -54,59 +54,63 @@ class Register extends React.Component {
 
     if (name === 'username') {
       userForm.username = value;
-      if(this.props.lang === 'en'){
+      if (this.props.lang === 'en') {
         errors.username = (value.length < 4 || !this.validateUser(value)) ? 'Username must be atleast 5 characters long' : '';
-      }else{
+      } else {
         errors.username = (value.length < 4 || !this.validateUser(value)) ? 'ต้องมีความยาวอย่างน้อย 5 ตัวอักษร' : '';
       }
     } else if (name === 'password') {
       userForm.password = value
-      
-      if(this.props.lang === 'en'){
+
+      if (this.props.lang === 'en') {
         errors.password = (value.length < 5 || !this.validatePassword(value)) ? 'Password must be atleast 6 characters long' : '';
-      }else{
+      } else {
         errors.password = (value.length < 5 || !this.validatePassword(value)) ? 'ต้องมีความยาวอย่างน้อย 6 ตัวอักษร' : '';
       }
     } else if (name === 'comfirmPassword') {
       userForm.comfirmPassword = value
-      if(this.props.lang === 'en'){
+      if (this.props.lang === 'en') {
         errors.comfirmPassword = (userForm.password !== value) ? 'Password and confirmation password do not match' : '';
-      }else{
+      } else {
         errors.comfirmPassword = (userForm.password !== value) ? 'รหัสผ่านทั้งสองช่องไม่ตรงกัน' : '';
       }
     } else if (name === 'firstname') {
       userForm.firstname = value
-      errors.firstname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
+      errors.firstname = !this.validateName(value) ? '[a-zA-Z] หรือ [ก-ฮ]' : '';
     } else if (name === 'lastname') {
       userForm.lastname = value
-      errors.lastname = !this.validateName(value) ? '[A-Z/ก-ฮ]' : '';
+      errors.lastname = !this.validateName(value) ? '[a-zA-Z] หรือ [ก-ฮ]' : '';
     } else if (name === 'citizen_id') {
       userForm.citizen_id = value
-      if(this.props.lang === 'en'){
+      if (this.props.lang === 'en') {
         errors.citizen_id = !this.validateCitizenID(value) ? 'Invalid Citizen ID' : '';
-      }else{
+      } else {
         errors.citizen_id = !this.validateCitizenID(value) ? 'รหัสประชาชนไม่ถูกต้อง' : '';
       }
     } else if (name === 'email') {
       userForm.email = value
-      if(this.props.lang === 'en'){
+      if (this.props.lang === 'en') {
         errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-      }else{
+      } else {
         errors.email = !this.validateEmail(value) ? 'อีเมลไม่ถูกต้อง' : '';
       }
-    } else if (name === 'e_code') {
-      userForm.e_code = value
-      
-      if(this.props.lang === 'en'){
-        errors.e_code = !this.validateEcode(value) ? 'Invalid E_code': '';
-      }else{
-        errors.e_code = !this.validateEcode(value) ? 'E_code ไม่ถูกต้อง': '';
-      }
     }
+    // else if (name === 'e_code') {
+    //   userForm.e_code = value
+
+    //   if (this.props.lang === 'en') {
+    //     errors.e_code = !this.validateEcode(value) ? 'Invalid E_code' : '';
+    //   } else {
+    //     errors.e_code = !this.validateEcode(value) ? 'E_code ไม่ถูกต้อง' : '';
+    //   }
+    // }
 
     let checkNull = false;
+    console.log(userForm)
     for (let i in userForm) {
-      if (userForm[i] === '') {
+      console.log(typeof(i), i)
+      if (userForm[i] === '' && i !== 'e_code' ) {
+        console.log(i)
         checkNull = true;
       }
     }
@@ -123,11 +127,43 @@ class Register extends React.Component {
     this.setState({ userForm, errors, checkNull, checkErrors })
   }
 
+  addECode = () => {
+    let e_code = [...this.state.userForm.e_code, ''];
+    let errorEcode = e_code.map(el => { return this.validateEcode(el)})
+    this.setState(prevState => ({ userForm: {...this.state.userForm, e_code}, errorEcode}))
+  }
+
+  deleteECode = (i) => {
+    let e_code = [...this.state.userForm.e_code];
+    e_code.splice(i,1);
+    this.setState({ userForm: {...this.state.userForm, e_code} });
+  }
+
+  ECodeHandle = (i, event) => {
+    let e_code = [...this.state.userForm.e_code];
+    e_code[i] = event.target.value;
+    let errorEcode = e_code.map(el => {return this.validateEcode(el)})
+    let checkErrors = false;
+    console.log(errorEcode)
+    for (let i in errorEcode) {
+      if (!i) {
+        checkErrors = true;
+      }
+    }
+    
+    this.setState({  userForm: {...this.state.userForm, e_code} , errorEcode, checkErrors});
+  }
+
   submit(event) {
     // event.preventDefault();
     this.setState({ isLoading: true });
 
     const userForm = this.state.userForm;
+    let e_code = userForm.e_code;
+    e_code = e_code.filter( (item) => {return item!==''})
+    let e_code_list = JSON.stringify({e_code});
+    console.log(e_code_list)
+
     const reqBody = {
       username: userForm.username,
       password: userForm.password,
@@ -135,7 +171,7 @@ class Register extends React.Component {
       lastname: userForm.lastname,
       citizen_id: userForm.citizen_id,
       email: userForm.email,
-      e_code: userForm.e_code,
+      e_code_list
     }
 
     const config = {
@@ -146,12 +182,12 @@ class Register extends React.Component {
 
     console.log('in submit');
     console.log(reqBody)
-   
+
     axios.post('https://mlffts-api.herokuapp.com/register', qs.stringify(reqBody), config).then(
       res => {
         console.log(this.state.isLoading)
         console.log(res)
-        this.setState({ isLoading: false, isModal:true })
+        this.setState({ isLoading: false, isModal: true })
         // show modal and reload
       }).catch(err => {
         console.log('error ja')
@@ -164,7 +200,6 @@ class Register extends React.Component {
           // this.setState({ isLoading: false, isError: err.response.data })
         }
       })
-
   }
 
   validatePassword = (pass) => {
@@ -182,8 +217,9 @@ class Register extends React.Component {
     return re.test(String(user));
   }
 
-  validateEcode= (user) => {
+  validateEcode = (user) => {
     let re = /^(\d{10})$/;
+    if(user === ''){ return true }
     return re.test(String(user));
   }
 
@@ -200,6 +236,7 @@ class Register extends React.Component {
 
 
   render() {
+    console.log(this.state.userForm.e_code)
     let errors = this.state.errors;
     return (
       <div className="navbar-space">
@@ -245,7 +282,7 @@ class Register extends React.Component {
         {
           this.state.isModal ?
             <Modal lang={this.props.lang}>
-              <div className="box" style={{ padding: '2.5rem 2rem 1rem 2rem' , borderRadius:'5px'}}>
+              <div className="box" style={{ padding: '2.5rem 2rem 1rem 2rem', borderRadius: '5px' }}>
                 <div className="columns has-text-centered is-centered">
                   <div className="column is-11">
                     <div className="container">
@@ -253,7 +290,7 @@ class Register extends React.Component {
                         <i className="far fa-check-circle"></i>
                       </span>
                     </div>
-                    <p className="title Sarabun" style={{marginTop:'1rem'}}><Lang lang={this.props.lang} en="Registration completed successfully" th="สมัครสมาชิกเสร็จสมบูรณ์" /></p>
+                    <p className="title Sarabun" style={{ marginTop: '1rem' }}><Lang lang={this.props.lang} en="Registration completed successfully" th="สมัครสมาชิกเสร็จสมบูรณ์" /></p>
                     <p className="subtitle Sarabun"><Lang lang={this.props.lang} en="Please check your registered email to activate your account" th="โปรดตรวจสอบอีเมลของคุณเพื่อเปิดใช้งานบัญชี" /></p>
                     <a className="button Sarabun modal-login-btn is-dark" href="/login"> <Lang lang={this.props.lang} en="Log In" th="เข้าสู่ระบบ" /></a>
                   </div>
@@ -400,27 +437,81 @@ class Register extends React.Component {
                       </div>
                     </div>
 
-                    <div className="field is-horizontal">
+                    {
+                      this.state.userForm.e_code.map((el, i) => {
+                        if (i !== 0) {
+                          return (
+                            <div className="field  is-horizontal" key={i}>
+                              <div className="field-label is-normal">
+                                <label className=" ">E_code</label>
+                              </div>
+                              <div className="field-body">
+                                <div className="field has-addons">
+                                  <div className="control is-expanded">
+                                    <input className="input" type="text" placeholder=""
+                                      name="e_code"
+                                      placeholder=""
+                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      value={el} />
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                  </div>
+                                  <div className="control">
+                                    <a className="button is-danger" onClick={this.deleteECode.bind(this,i)}>
+                                      <span className="icon is-small">
+                                        <i className="fas fa-times " ></i>
+                                      </span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        } else {
+                          return (
+                            <div className="field  is-horizontal" key={i}>
+                              <div className="field-label is-normal">
+                                <label className=" ">E_code <span className="red-span">*</span></label>
+                              </div>
+                              <div className="field-body">
+                                <div className="field">
+                                  <div className="control">
+                                    <input className="input" type="text" placeholder=""
+                                      name="e_code"
+                                      placeholder=""
+                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      value={el} />
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                      })}
+
+                    <div className="field  is-horizontal" >
                       <div className="field-label is-normal">
-                        <label className=" ">E_code <span className="red-span">*</span></label>
+                        <label className=" "></label>
                       </div>
                       <div className="field-body">
                         <div className="field">
                           <div className="control">
-                            <input className="input" type="text" placeholder=""
-                              name="e_code"
-                              placeholder=""
-                              onChange={this.handleChange}
-                              value={this.state.userForm.e_code} />
-                            {errors.e_code.length > 0 && <span className='error'>{errors.e_code}</span>}
+                            <buttoon className="button is-fullwidth is-light" onClick={this.addECode}>
+                              <span className="icon is-small"><i className="fas fa-plus-circle"></i></span>
+                              <span><Lang lang={this.props.lang} en="Add E_code" th="เพิ่ม E_code" /></span>
+                            </buttoon>
                           </div>
                         </div>
                       </div>
                     </div>
 
+
                     <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                       <p className="control">
-                        <button className={`button is-dark ${this.state.isLoading ? 'is-loading' : ''}`} disabled={this.state.checkNull || this.state.checkErrors} onClick={this.submit}>
+                        {
+                          console.log(this.state.checkNull, this.state.checkErrors, this.state.userForm.e_code[0]==='')
+                        }
+                        <button className={`button is-dark ${this.state.isLoading ? 'is-loading' : ''}`} disabled={this.state.checkNull || this.state.checkErrors || this.state.userForm.e_code[0]===''} onClick={this.submit}>
                           <Lang lang={this.props.lang} en="Submit" th="ยืนยัน" />
                         </button>
                       </p>
