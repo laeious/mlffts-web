@@ -30,27 +30,28 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
 
 const TableRowBase = ({ tableRow, selected, onToggle, classes, ...restProps }) => {
 
-    const handleClick = () => {
-        alert(JSON.stringify(tableRow.row));
-    };
+    // const handleClick = () => {
+    //     alert(JSON.stringify(tableRow.row));
+    // };
 
-    const handleDoubleClick = () => {
-        alert(JSON.stringify(tableRow.row));
-    }
+    // const handleDoubleClick = () => {
+    //     alert(JSON.stringify(tableRow.row));
+    // }
 
     return (
         <Table.Row
             {...restProps}
             className={classes.customRow}
             style={{ color: 'green' }}
-            onClick={handleClick}
-            onDoubleClick={handleDoubleClick}
+            // onClick={handleClick}
+            // onDoubleClick={handleDoubleClick}
         />
     );
 };
@@ -128,7 +129,19 @@ export default (props) => {
     const [modeTxt, setModeTxt] = useState('');
     const [dialogTitle, setDialogTitle] = useState('');
     const [subDialogTitle, setSubDialogTitle] = useState('');
+    const [open, setOpen] = useState(false);
 
+    const handleOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
     const hideDialog = () => {
         setRows(rowBefore);
         setIsDialog(false);
@@ -191,6 +204,7 @@ export default (props) => {
         axios.post('https://mlffts-api.herokuapp.com/account/edit', qs.stringify(reqBody), config).then(
             res => {
                 console.log('done ' + res)
+                handleOpen()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -313,7 +327,7 @@ export default (props) => {
 
                 </DialogActions>
             </Dialog>
-            {/* <Snackbar
+            <Snackbar
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -330,7 +344,7 @@ export default (props) => {
                         </IconButton>
                     </React.Fragment>
                 }
-            /> */}
+            />
         </Paper>
     );
 };

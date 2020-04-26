@@ -22,6 +22,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Lang from '../../helpers/Lang';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 
@@ -99,6 +102,18 @@ export default (props) => {
     const [modeTxt, setModeTxt] = useState('');
     const [dialogTitle, setDialogTitle] = useState('');
     const [subDialogTitle, setSubDialogTitle] = useState('');
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpen(false);
+    };
 
 
     const getQueryString = () => (
@@ -161,6 +176,7 @@ export default (props) => {
         axios.post('https://mlffts-api.herokuapp.com/checkpoint/add', qs.stringify(reqBody), config).then(
             res => {
                 console.log('done ' + res)
+                handleOpen()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -192,6 +208,7 @@ export default (props) => {
         axios.post('https://mlffts-api.herokuapp.com/checkpoint/delete', qs.stringify(reqBody), config).then(
             res => {
                 console.log('done ' + res)
+                handleOpen()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -230,6 +247,7 @@ export default (props) => {
             axios.post('https://mlffts-api.herokuapp.com/checkpoint/edit', qs.stringify(reqBody), config).then(
                 res => {
                     console.log('done ' + res)
+                    handleOpen()
                 }).catch(err => {
                     console.log('error ja')
                     console.log(err)
@@ -383,6 +401,24 @@ export default (props) => {
 
                     </DialogActions>
                 </Dialog>
+                <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                open={open}
+                autoHideDuration={2000}
+                onClose={handleClose}
+                message={props.lang === 'en' ? "The operation was successful." : "ดำเนินการสำเร็จ"}
+
+                action={
+                    <React.Fragment>
+                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                }
+            />
             </Paper>
     );
 };

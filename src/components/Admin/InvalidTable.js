@@ -18,6 +18,9 @@ import AsyncSelect from 'react-select/async';
 import Lang from '../../helpers/Lang';
 import Spinner from 'react-spinkit';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 
 
@@ -60,15 +63,18 @@ export default (props) => {
     const [selectedRow, setSelectedRow] = useState({});
     const [image, setImage] = useState('');
     const [imageData, setImageData] = useState({});
+    const [open, setOpen] = useState(false);
 
-
-
-    // const handleToggle = useCallback(
-    //     () => {
-    //         toggleModal(!isModal);
-    //     },
-    //     [isModal],
-    // );
+    const handleOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpen(false);
+    };
 
     const handleToggle = () =>{
         if(isModal){
@@ -268,7 +274,9 @@ export default (props) => {
         
               axios.post('https://mlffts-api.herokuapp.com/transaction/add', qs.stringify(reqBody), config).then(
                 res => {
-                  console.log(res.data);
+                  console.log(res);
+                  handleToggle();
+                  handleOpen();
                 }).catch(err => {
                   console.log('error ja')
                   console.log(err)
@@ -324,8 +332,7 @@ export default (props) => {
 
     }
 
-    if (rows.length === 0) {
-
+    if (loading) {
         return (
             <div >
                   <LinearProgress />
@@ -425,6 +432,24 @@ export default (props) => {
                     <TableHeaderRow />
                     <PagingPanel />
                 </Grid>
+                <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                open={open}
+                autoHideDuration={2000}
+                onClose={handleClose}
+                message={props.lang === 'en' ? "The operation was successful." : "ดำเนินการสำเร็จ"}
+
+                action={
+                    <React.Fragment>
+                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                }
+            />
             </Paper>
         </div>
     );
