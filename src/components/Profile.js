@@ -5,6 +5,8 @@ import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import getToken from '../helpers/getToken';
 import Lang from '../helpers/Lang';
+import Modal from './Modal';
+
 
 class Profile extends React.Component {
   constructor(props) {
@@ -39,7 +41,8 @@ class Profile extends React.Component {
       duplicateUser: false,
       duplicateEmail: false,
       duplicateLicense: false,
-      isCancel: false
+      isCancel: false,
+      isModal: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -64,7 +67,7 @@ class Profile extends React.Component {
     } else if (name === 'email') {
       userForm.email = value
       errors.email = !this.validateEmail(value) ? 'Invalid Email' : '';
-    } 
+    }
 
     let checkNull = false;
     for (let i in userForm) {
@@ -84,8 +87,8 @@ class Profile extends React.Component {
   }
 
   checkObjects = (id, list) => {
-    for(let i=0; i<list.length; i++){
-      if(list[i].e_code_id === id){
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].e_code_id === id) {
         return true
       }
     }
@@ -125,9 +128,9 @@ class Profile extends React.Component {
         }
       })
   }
-  
+
   submitDelete = (id) => {
-    
+
     const reqBody = {
       e_code_id: id
     }
@@ -160,7 +163,7 @@ class Profile extends React.Component {
       })
   }
 
-  
+
   submit(event) {
     event.preventDefault();
 
@@ -174,21 +177,21 @@ class Profile extends React.Component {
     }
     console.log(reqBody)
 
- 
+
     console.log(this.state.originalEcode);
     console.log(this.state.user.e_code_id);
     let oldE = this.state.originalEcode;
     let newE = this.state.user.e_code_id
 
-    for(let i=0; i<oldE.length; i++){
+    for (let i = 0; i < oldE.length; i++) {
       let check = this.checkObjects(oldE[i].e_code_id, newE)
-      if(!check){
+      if (!check) {
         this.submitDelete(oldE[i].e_code_id);
       }
     }
 
-    for(let i=0; i<newE.length; i++){
-      if(newE[i].e_code_id === null){
+    for (let i = 0; i < newE.length; i++) {
+      if (newE[i].e_code_id === null) {
         this.submitAdd(newE[i].e_code)
       }
     }
@@ -207,7 +210,7 @@ class Profile extends React.Component {
     axios.post('https://mlffts-api.herokuapp.com/profile/edit', qs.stringify(reqBody), config).then(
       res => {
         console.log(res);
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false, isModal:true })
       }).catch(err => {
         console.log('error ja')
         console.log(err)
@@ -238,13 +241,9 @@ class Profile extends React.Component {
     return re.test(String(email).toLowerCase());
   }
 
-  addLineNoti = () => {
-    window.open("https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=30zspWaxsQs0We0MzyM4Qv&redirect_uri=http://localhost:8080/noti&state=12345abcde&scope=notify");
-  }
-
   cancelLineNoti = () => {
     this.setState({ isCancel: true })
-        
+
     const reqBody = {
       access_token: null
     }
@@ -278,26 +277,26 @@ class Profile extends React.Component {
 
   validateEcode = (user) => {
     let re = /^(\d{10})$/;
-    if(user === ''){ return true }
+    if (user === '') { return true }
     return re.test(String(user));
   }
 
   addECode = () => {
-    let e_code_id = [...this.state.user.e_code_id, {e_code_id: null,e_code:''}];
-    let errorEcode = e_code_id.map(el => { return this.validateEcode(el.e_code)})
-    this.setState(prevState => ({ user: {...prevState.user, e_code_id}, errorEcode}))
+    let e_code_id = [...this.state.user.e_code_id, { e_code_id: null, e_code: '' }];
+    let errorEcode = e_code_id.map(el => { return this.validateEcode(el.e_code) })
+    this.setState(prevState => ({ user: { ...prevState.user, e_code_id }, errorEcode }))
   }
 
   deleteECode = (i) => {
     let e_code_id = [...this.state.user.e_code_id];
-    e_code_id.splice(i,1);
-    this.setState({ user: {...this.state.user, e_code_id} });
+    e_code_id.splice(i, 1);
+    this.setState({ user: { ...this.state.user, e_code_id } });
   }
 
   ECodeHandle = (i, event) => {
     let e_code_id = [...this.state.user.e_code_id];
     e_code_id[i].e_code = event.target.value;
-    let errorEcode = e_code_id.map(el => {return this.validateEcode(el.e_code)})
+    let errorEcode = e_code_id.map(el => { return this.validateEcode(el.e_code) })
     let checkErrors = false;
 
     for (let i in errorEcode) {
@@ -305,10 +304,12 @@ class Profile extends React.Component {
         checkErrors = true;
       }
     }
-    
-    
-    this.setState({  user: {...this.state.user, e_code_id} , errorEcode, checkErrors});
+
+
+    this.setState({ user: { ...this.state.user, e_code_id }, errorEcode, checkErrors });
   }
+
+  closeModal = () => { this.setState({ isModal: false }) }
 
   render() {
 
@@ -320,11 +321,28 @@ class Profile extends React.Component {
 
     console.log(this.state.user.e_code_id)
 
-    let checkEcodeEmpty = (this.state.user.e_code_id.length === 1  && this.state.user.e_code_id[0].e_code === '');
+    let checkEcodeEmpty = (this.state.user.e_code_id.length === 1 && this.state.user.e_code_id[0].e_code === '');
 
 
     return (
       <div className="">
+        {
+          this.state.isModal ?
+            <Modal lang={this.props.lang} toggle={this.closeModal}>
+              <div className="box" style={{ padding: '2.5rem 1rem 1rem 1rem', borderRadius: '5px' }}>
+                <div className="columns has-text-centered is-centered">
+                  <div className="column is-11">
+                    <span className="icon check-icon">
+                      <i className="far fa-check-circle"></i>
+                    </span>
+                    <p className="subtitle Sarabun" style={{ marginTop: '1rem' , fontWeight:'bold'}}><Lang lang={this.props.lang} en="Profile changes saved successfully" th="บันทึกการเปลี่ยนแปลงโปรไฟล์สำเร็จแล้ว" /></p>
+                    <button className="button Sarabun modal-login-btn is-dark" onClick={this.closeModal}> <Lang lang={this.props.lang} en="OK" th="ตกลง" /></button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+            : null
+        }
         <div className="section" style={{ padding: "1rem 1.5rem" }}>
           <div className="contianer">
 
@@ -412,7 +430,7 @@ class Profile extends React.Component {
 
                     {
                       this.state.user.e_code_id.map((el, i) => {
-                        if(this.state.user.e_code_id.length === 1) {
+                        if (this.state.user.e_code_id.length === 1) {
                           return (
                             <div className="field is-horizontal" key={i}>
                               <div className="field-label is-normal">
@@ -424,9 +442,9 @@ class Profile extends React.Component {
                                     <input className="input" type="text" placeholder=""
                                       name="e_code_id"
                                       placeholder=""
-                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      onChange={this.ECodeHandle.bind(this, i)}
                                       value={el.e_code} />
-                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง' /></span>}
                                   </div>
                                 </div>
                               </div>
@@ -445,9 +463,9 @@ class Profile extends React.Component {
                                     <input className="input" type="text" placeholder=""
                                       name="e_code_id"
                                       placeholder=""
-                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      onChange={this.ECodeHandle.bind(this, i)}
                                       value={el.e_code} />
-                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง' /></span>}
                                   </div>
                                   <div className="control">
                                     <a className="button is-danger" onClick={this.deleteECode.bind(this, i)}>
@@ -472,9 +490,9 @@ class Profile extends React.Component {
                                     <input className="input" type="text" placeholder=""
                                       name="e_code_id"
                                       placeholder=""
-                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      onChange={this.ECodeHandle.bind(this, i)}
                                       value={el.e_code} />
-                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง' /></span>}
                                   </div>
                                   <div className="control">
                                     <a className="button is-danger" onClick={this.deleteECode.bind(this, i)}>
@@ -503,7 +521,7 @@ class Profile extends React.Component {
                       <div className="field-body">
                         <div className="field">
                           <div className="control">
-                            <button className="button is-fullwidth is-light" onClick={this.addECode} disabled={!this.validateEcode(this.state.user.e_code_id[this.state.user.e_code_id.length-1].e_code) || this.state.user.e_code_id[this.state.user.e_code_id.length-1].e_code === ''}>
+                            <button className="button is-fullwidth is-light" onClick={this.addECode} disabled={!this.validateEcode(this.state.user.e_code_id[this.state.user.e_code_id.length - 1].e_code) || this.state.user.e_code_id[this.state.user.e_code_id.length - 1].e_code === ''}>
                               <span className="icon is-small"><i className="fas fa-plus-circle"></i></span>
                               <span><Lang lang={this.props.lang} en="Add E_code" th="เพิ่ม E_code" /></span>
                             </button>
