@@ -84,7 +84,7 @@ export default (props) => {
         const handleClick = () => {
             setRowNum(tableRow.row.lp_num);
             setRowPro(tableRow.row.lp_prov);
-            // setSelectedRow(tableRow.row)
+            setSelectedRow(tableRow.row)
             loadImage(tableRow.row.img_path, tableRow.row.location_in, tableRow.row.location_out);
             toggleModal(!isModal);
         };
@@ -242,7 +242,46 @@ export default (props) => {
         if(lpnum !== '' && lppro !== ''){
             setNumEmpty(false);
             setProEmpty(false);
-            console.log(lpnum,lppro);
+            
+            let timestamp_in = new Date(selectedRow.timestamp_in).toISOString().replace('T', ' ').slice(0,-5)
+            let timestamp_out = new Date(selectedRow.timestamp_out).toISOString().replace('T', ' ').slice(0,-5)
+            let his_id = selectedRow._id
+
+            const reqBody = {
+                lp_num: lpnum,
+                province: lppro,
+                charges_id: imageData.charge_id,
+                in_datetime: timestamp_in,
+                out_datetime: timestamp_out,
+                history_id: his_id,
+                image_name: imageData.image_name
+              }
+              console.log(reqBody)
+          
+              const token = getToken();
+              const config = {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  Authorization: `Bearer ${token}`
+                }
+              }
+        
+              axios.post('https://mlffts-api.herokuapp.com/ecodemap/add', qs.stringify(reqBody), config).then(
+                res => {
+                  console.log(res);
+                  
+                }).catch(err => {
+                  console.log('error ja')
+                  console.log(err)
+                  if (err.response) {
+                    console.log(err.response.data);
+                    console.log((err.response));
+          
+                    console.log(err.response.status);
+                    console.log(err.response.headers);
+                  }
+                })
+
         }else{
             if(lpnum === ''){
                 setNumEmpty(true);
