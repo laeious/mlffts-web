@@ -59,6 +59,7 @@ export default (props) => {
     const [isProEmpty, setProEmpty] = useState(false);
     const [selectedRow, setSelectedRow] = useState({});
     const [image, setImage] = useState('');
+    const [imageData, setImageData] = useState({});
 
 
 
@@ -257,16 +258,18 @@ export default (props) => {
     }
 
     const loadImage = (img_path, cpk_1, cpk_2) =>{
-        console.log(img_path)
+        // console.log(img_path)
+        const imgName =  img_path.split('/')[1]
         const token = getToken();
-        const queryString = `https://mlffts-api.herokuapp.com/invalid/info?cpk_1=${cpk_1}&cpk_2=${cpk_2}&image_name=${img_path}`;
+        const queryString = `https://mlffts-api.herokuapp.com/invalid/info?cpk_1=${cpk_1}&cpk_2=${cpk_2}&image_name=${imgName}`;
         if (token && queryString) {
             console.log('in load image if')
             axios.get(queryString, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(res => {
-                console.log(res.data)
+                console.log(res.data);
                 setImage(res.data.image);
+                setImageData(res.data);
             }
             ).catch((err) => {
                 console.log(err)
