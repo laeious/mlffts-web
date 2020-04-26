@@ -266,10 +266,9 @@ export default (props) => {
                 }
               }
         
-              axios.post('https://mlffts-api.herokuapp.com/ecodemap/add', qs.stringify(reqBody), config).then(
+              axios.post('https://mlffts-api.herokuapp.com/transaction/add', qs.stringify(reqBody), config).then(
                 res => {
-                  console.log(res);
-                  
+                  console.log(res.data);
                 }).catch(err => {
                   console.log('error ja')
                   console.log(err)

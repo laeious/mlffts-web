@@ -28,6 +28,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Lang from '../../helpers/Lang';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
+
+
 
 const TableRowBase = ({ tableRow, selected, onToggle, classes, ...restProps }) => {
 
@@ -308,6 +313,24 @@ export default (props) => {
 
                 </DialogActions>
             </Dialog>
+            {/* <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                open={open}
+                autoHideDuration={2000}
+                onClose={handleClose}
+                message={props.lang === 'en' ? "The operation was successful." : "ดำเนินการสำเร็จ"}
+
+                action={
+                    <React.Fragment>
+                        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </React.Fragment>
+                }
+            /> */}
         </Paper>
     );
 };
