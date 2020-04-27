@@ -36,10 +36,9 @@ class Register extends React.Component {
       emailInvalid: false,
       passwordInvalid: false,
       hidePassword: true,
-      duplicateUser: false,
-      duplicateEmail: false,
-      duplicateLicense: false,
-      isModal: false
+      isModal: false,
+      errMessage: '',
+      isErrorModal: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -108,8 +107,8 @@ class Register extends React.Component {
     let checkNull = false;
     console.log(userForm)
     for (let i in userForm) {
-      console.log(typeof(i), i)
-      if (userForm[i] === '' && i !== 'e_code' ) {
+      console.log(typeof (i), i)
+      if (userForm[i] === '' && i !== 'e_code') {
         console.log(i)
         checkNull = true;
       }
@@ -129,20 +128,20 @@ class Register extends React.Component {
 
   addECode = () => {
     let e_code = [...this.state.userForm.e_code, ''];
-    let errorEcode = e_code.map(el => { return this.validateEcode(el)})
-    this.setState(prevState => ({ userForm: {...this.state.userForm, e_code}, errorEcode}))
+    let errorEcode = e_code.map(el => { return this.validateEcode(el) })
+    this.setState(prevState => ({ userForm: { ...this.state.userForm, e_code }, errorEcode }))
   }
 
   deleteECode = (i) => {
     let e_code = [...this.state.userForm.e_code];
-    e_code.splice(i,1);
-    this.setState({ userForm: {...this.state.userForm, e_code} });
+    e_code.splice(i, 1);
+    this.setState({ userForm: { ...this.state.userForm, e_code } });
   }
 
   ECodeHandle = (i, event) => {
     let e_code = [...this.state.userForm.e_code];
     e_code[i] = event.target.value;
-    let errorEcode = e_code.map(el => {return this.validateEcode(el)})
+    let errorEcode = e_code.map(el => { return this.validateEcode(el) })
     let checkErrors = false;
     console.log(errorEcode)
     for (let i in errorEcode) {
@@ -150,8 +149,8 @@ class Register extends React.Component {
         checkErrors = true;
       }
     }
-    
-    this.setState({  userForm: {...this.state.userForm, e_code} , errorEcode, checkErrors});
+
+    this.setState({ userForm: { ...this.state.userForm, e_code }, errorEcode, checkErrors });
   }
 
   submit(event) {
@@ -160,8 +159,8 @@ class Register extends React.Component {
 
     const userForm = this.state.userForm;
     let e_code = userForm.e_code;
-    e_code = e_code.filter( (item) => {return item!==''})
-    let e_code_list = JSON.stringify({e_code});
+    e_code = e_code.filter((item) => { return item !== '' })
+    let e_code_list = JSON.stringify({ e_code });
     console.log(e_code_list)
 
     const reqBody = {
@@ -195,6 +194,17 @@ class Register extends React.Component {
         if (err.response) {
           console.log(err.response.data);
           console.log(err.response.status);
+          console.log(typeof(err.response.status))
+          if (err.response.data === 'Username duplicates') {
+            let txt = this.props.lang === 'en' ? 'This Username already in use. Please choose another Username' : 'ชื่อผู้ใช้นี้มีการใช้งานแล้ว กรุณาเลือกชื่อผู้ใช้อื่น';
+            this.setState({ errMessage: txt, isErrorModal: true })
+          } else if (err.response.data === 'Ecode duplicates') {
+            let txt = this.props.lang === 'en' ? 'This E_code already in use.' : 'E_code นี้มีการใช้งานแล้ว';
+            this.setState({ errMessage: txt, isErrorModal: true })
+          } else if (err.response.data === 'Email duplicates') {
+            let txt = this.props.lang === 'en' ? 'This email is already in use by another account' : 'Email นี้ถูกใช้โดยบัญชีอื่นแล้ว';
+            this.setState({ errMessage: txt, isErrorModal: true })
+          } 
           this.setState({ isLoading: false })
           // console.log(err.response.headers);        
           // this.setState({ isLoading: false, isError: err.response.data })
@@ -219,7 +229,7 @@ class Register extends React.Component {
 
   validateEcode = (user) => {
     let re = /^(\d{10})$/;
-    if(user === ''){ return true }
+    if (user === '') { return true }
     return re.test(String(user));
   }
 
@@ -234,6 +244,9 @@ class Register extends React.Component {
     return re.test(String(email).toLowerCase());
   }
 
+  closeErrModal = () => {
+    this.setState({isErrorModal: false});
+  }
 
   render() {
     console.log(this.state.userForm.e_code)
@@ -310,6 +323,15 @@ class Register extends React.Component {
                     <h3 className="title is-2 has-text-centered Sarabun"><Lang lang={this.props.lang} en="Register" th="สมัครสมาชิก" /></h3>
 
                     <hr />
+                    {this.state.isErrorModal &&
+                      (
+                        <div className="notification is-error">
+                          <button className="delete" onClick={this.closeErrModal}></button>
+                          {this.state.errMessage}
+                        </div>
+                      )
+                    }
+
                     <div className="field is-horizontal">
                       <div className="field-label is-normal">
                         <label className=" "><Lang lang={this.props.lang} en="Username" th="ชื่อผู้ใช้" /> <span className="red-span">*</span></label>
@@ -451,12 +473,12 @@ class Register extends React.Component {
                                     <input className="input" type="text" placeholder=""
                                       name="e_code"
                                       placeholder=""
-                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      onChange={this.ECodeHandle.bind(this, i)}
                                       value={el} />
-                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง' /></span>}
                                   </div>
                                   <div className="control">
-                                    <a className="button is-danger" onClick={this.deleteECode.bind(this,i)}>
+                                    <a className="button is-danger" onClick={this.deleteECode.bind(this, i)}>
                                       <span className="icon is-small">
                                         <i className="fas fa-times " ></i>
                                       </span>
@@ -478,9 +500,9 @@ class Register extends React.Component {
                                     <input className="input" type="text" placeholder=""
                                       name="e_code"
                                       placeholder=""
-                                      onChange={this.ECodeHandle.bind(this,i)}
+                                      onChange={this.ECodeHandle.bind(this, i)}
                                       value={el} />
-                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง'/></span>}
+                                    {!this.state.errorEcode[i] && <span className='error'><Lang lang={this.props.lang} en='Invalid E_code' th='E_code ไม่ถูกต้อง' /></span>}
                                   </div>
                                 </div>
                               </div>
@@ -509,9 +531,9 @@ class Register extends React.Component {
                     <div className="field is-grouped is-grouped-right" style={{ marginTop: "2em" }}>
                       <p className="control">
                         {
-                          console.log(this.state.checkNull, this.state.checkErrors, this.state.userForm.e_code[0]==='')
+                          console.log(this.state.checkNull, this.state.checkErrors, this.state.userForm.e_code[0] === '')
                         }
-                        <button className={`button is-dark ${this.state.isLoading ? 'is-loading' : ''}`} disabled={this.state.checkNull || this.state.checkErrors || this.state.userForm.e_code[0]===''} onClick={this.submit}>
+                        <button className={`button is-dark ${this.state.isLoading ? 'is-loading' : ''}`} disabled={this.state.checkNull || this.state.checkErrors || this.state.userForm.e_code[0] === ''} onClick={this.submit}>
                           <Lang lang={this.props.lang} en="Submit" th="ยืนยัน" />
                         </button>
                       </p>

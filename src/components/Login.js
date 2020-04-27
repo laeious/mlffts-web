@@ -94,7 +94,6 @@ class Login extends React.Component {
             }
             localStorage.removeItem('mlffts-jwt');
 
-            console.log(reqBody);
             // this.setState({isLoading:false});
             axios.post('https://mlffts-api.herokuapp.com/login', qs.stringify(reqBody), config).then(
                 res => {
