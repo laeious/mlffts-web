@@ -458,6 +458,8 @@ class Home extends React.Component {
                                                                     options={this.state.license_list}
                                                                     isClearable={true}
                                                                     isSearchable="false"
+                                                                    onChange={this.lpSelect}
+                                                                    value={this.state.lpSelected}
                                                                     placeholder={this.props.lang === 'en' ? 'Select Car' : 'เลือกรถ'}
                                                                 />
                                                             </div>

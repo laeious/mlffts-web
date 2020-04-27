@@ -149,7 +149,7 @@ export default (props) => {
 
 
     const getQueryString = () => (
-        `https://mlffts-api.herokuapp.com/invalid/limit=${pageSize}&offset=${pageSize * currentPage}&cpkid=1`
+        `https://mlffts-api.herokuapp.com/invalid/limit=${pageSize}&offset=${pageSize * currentPage}&cpkid=${props.cpk_id}`
     );
 
     const loadData = () => {

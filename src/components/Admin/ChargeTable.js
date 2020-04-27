@@ -230,7 +230,7 @@ export default (props) => {
             res => {
                 console.log('done ' + res)
                 handleOpen()
-                reload()
+                // reload()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -319,7 +319,7 @@ export default (props) => {
             const context = rows.filter(i =>  i.id == deleted[0]);
             console.log(context)
             const dialogtxt = props.lang === 'th' ? 'ลบ' : 'Delete';
-            const subdialogtxt = props.lang === 'th' ? 'คุณต้องการลบ checkpoint นี้ใช่หรือไม่' : 'Are you sure you want to delete this Charge?';
+            const subdialogtxt = props.lang === 'th' ? 'คุณต้องการลบ Charge นี้ใช่หรือไม่' : 'Are you sure you want to delete this Charge?';
             const buttontxt = props.lang === 'th' ? 'ลบ' : 'Delete';
             setModeTxt(buttontxt);
             setDialogTitle(dialogtxt);
@@ -397,8 +397,6 @@ export default (props) => {
                     <DialogContent>
                         <DialogContentText>
                             {subDialogTitle}
-                            <br />
-                            {dialogCont}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

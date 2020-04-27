@@ -6,7 +6,9 @@ import InvalidTable from './Admin/InvalidTable';
 import { withRouter } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-
+import Select from 'react-select';
+import getToken from '../helpers/getToken'
+import axios from 'axios';
 
 // import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-bootstrap4';
 // import { Grid, Table, TableHeaderRow } from '@devexpress/dx-react-grid-bootstrap3';
@@ -18,13 +20,17 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTab: 2,
-      inputValue: ''
+      currentTab: 3,
+      inputValue: '',
+      cpk_list_th: [],
+      cpk_list_en: [],
+      cpkSelected: props.lang === 'en' ? {value: "Chonburi", label: "Chonburi", id: 1}: {value: "ชลบุรี", label: "ชลบุรี", id: 1},
+      cpk_id: 1
     }
   }
 
   componentDidMount() {
-
+    this.loadCPK();
   }
 
   getRowId = row => row.id;
@@ -61,6 +67,29 @@ class Admin extends React.Component {
     }
   }
 
+ loadCPK = () => {
+    const token = getToken();
+    console.log(token)
+    if (token) {
+        axios.get('https://mlffts-api.herokuapp.com/checkpoint/limit=100&offset=0', {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then(res => {
+            
+            let options_th = res.data.data.map((item, i) => ({  value: item.area_name, label: item.area_name, id:item.id }));
+            let options_en = res.data.data.map((item, i) => ({  value: item.area_name_en, label: item.area_name_en, id:item.id }));
+            this.setState({cpk_list_th: options_th, cpk_list_en: options_en})
+        }
+        ).catch((err) => {
+            console.log(err)
+            // props.history.push('/login');
+        });
+    }
+};
+
+selectCPK = (selected) => {
+  console.log(selected)
+  this.setState({cpkSelected: selected, cpk_id:selected.id})
+}
 
   render() {
 
@@ -87,7 +116,7 @@ class Admin extends React.Component {
         <div className="navbar-space">
           <div className="columns is-centered">
             <div className="column is-11">
-              <div className="tabs is-boxed is-marginless">
+              <div className="tabs is-boxed is-marginless z-index-555">
                 <ul>
                   <li className={this.state.currentTab === 2 ? "is-active" : ""} >
                     <a value={2} onClick={this.handleTabsClick} >
@@ -109,9 +138,16 @@ class Admin extends React.Component {
                       <span value={3}>Invalid Transaction</span>
                     </a>
                   </li>
-
                 </ul>
-
+                {this.state.currentTab === 3 && 
+                <div className="container search-cpk-box">
+                  <Select
+                   options={this.props.lang === 'en' ? this.state.cpk_list_en : this.state.cpk_list_th}
+                   isSearchable="false"
+                   onChange={this.selectCPK}
+                   value={this.state.cpkSelected}
+                  />
+                </div>}
               </div>
 
               <ThemeProvider theme={theme} >
@@ -136,8 +172,7 @@ class Admin extends React.Component {
               }
               {
                 this.state.currentTab === 3 ?
-
-                  <InvalidTable history={this.props.history} lang={this.props.lang} />
+                  <InvalidTable history={this.props.history} lang={this.props.lang} cpk_id={this.state.cpk_id}/>
                   :
                   null
               }

@@ -651,3 +651,17 @@ fieldset {
   background-color: #feecf0;
   color: #cc0f35;
 }
+
+.search-cpk-box{
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  /* z-index: 555 !important; */
+  overflow:visible
+}
+
+.z-index-555{
+  /* z-index: 555 !important; */
+  overflow:visible
+
+}
