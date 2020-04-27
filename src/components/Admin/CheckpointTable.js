@@ -92,7 +92,7 @@ export default (props) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState();
-    const [pageSize] = useState(10);
+    const [pageSize] = useState(8);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
     const [isDialog, setIsDialog] = useState(false);
@@ -114,6 +114,33 @@ export default (props) => {
       }
       setOpen(false);
     };
+
+    const reload = () => {
+        const token = getToken();
+        console.log(token)
+        const queryString = getQueryString();
+        if (token && !loading ) {
+            setLoading(true);
+            axios.get(queryString, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => {
+                console.log(res.data)
+                setRows(res.data.data);
+                setTotalCount(res.data.count);
+                setLoading(false);
+            }
+            ).catch((err) => {
+                console.log(err)
+                setLoading(false)
+                if (err.response) {
+                    if (err.response.status === 404) {
+                        setRows([]);
+                        setLoading(false);
+                    }
+                }
+            });
+    }}
+
 
 
     const getQueryString = () => (
@@ -158,8 +185,8 @@ export default (props) => {
         const data = row[0]
         const token = getToken();
         const reqBody = {
-            lat: data.lat ? parseInt(data.lat) : null,
-            lng: data.lng ? parseInt(data.lng) : null,
+            lat: data.lat ? parseFloat(data.lat) : null,
+            lng: data.lng ? parseFloat(data.lng) : null,
             area_name: data.area_name,
             area_name_en: data.area_name_en
         }
@@ -177,6 +204,7 @@ export default (props) => {
             res => {
                 console.log('done ' + res)
                 handleOpen()
+                reload()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -209,6 +237,7 @@ export default (props) => {
             res => {
                 console.log('done ' + res)
                 handleOpen()
+                reload()
             }).catch(err => {
                 console.log('error ja')
                 console.log(err)
@@ -248,6 +277,7 @@ export default (props) => {
                 res => {
                     console.log('done ' + res)
                     handleOpen()
+                    reload()
                 }).catch(err => {
                     console.log('error ja')
                     console.log(err)

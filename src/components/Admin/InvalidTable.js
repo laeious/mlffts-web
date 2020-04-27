@@ -50,7 +50,7 @@ export default (props) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
     const [lastQuery, setLastQuery] = useState();
-    const [pageSize] = useState(10);
+    const [pageSize] = useState(8);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
     const [isModal, toggleModal] = useState(false);
@@ -120,7 +120,31 @@ export default (props) => {
 
     const CustomRow = withStyles(styles, { name: 'CustomRow' })(TableRowBase);
 
-
+    const reload = () => {
+        const token = getToken();
+        console.log(token)
+        const queryString = getQueryString();
+        if (token && !loading ) {
+            setLoading(true);
+            axios.get(queryString, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(res => {
+                console.log(res.data)
+                setRows(res.data.data);
+                setTotalCount(res.data.count);
+                setLoading(false);
+            }
+            ).catch((err) => {
+                console.log(err)
+                setLoading(false)
+                if (err.response) {
+                    if (err.response.status === 404) {
+                        setRows([]);
+                        setLoading(false);
+                    }
+                }
+            });
+    }}
 
 
 
@@ -277,6 +301,7 @@ export default (props) => {
                   console.log(res);
                   handleToggle();
                   handleOpen();
+                  reload();
                 }).catch(err => {
                   console.log('error ja')
                   console.log(err)
