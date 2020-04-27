@@ -258,7 +258,8 @@ export default (props) => {
         const token = getToken();
         const reqBody = {
             id: id,
-            ...data
+            lat: parseFloat(data.lat),
+            lng: parseFloat(data.lng)
         }
         console.log('reqbody', reqBody)
 
