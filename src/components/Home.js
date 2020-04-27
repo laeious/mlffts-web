@@ -124,10 +124,13 @@ class Home extends React.Component {
         if (!token) {
             this.props.history.push('/login');
         } else {
+            if(!this.state.lpSelected){
+                return
+            }
             this.setState({ isLoading: true })
-            let startDateStr = this.state.startDate ? this.state.startDate.toISOString().replace('T', ' ').slice(0, -5) : new Date("2019-01-01T01:00:00Z");
-            let endDateStr = this.state.endDate ? this.state.endDate.toISOString().replace('T', ' ').slice(0, -5) : new Date();
-            axios.get(`https://mlffts-api.herokuapp.com/transaction?status=1&date_from=${startDateStr}&date_to=${endDateStr}&limit=2&offset=${this.state.transList.length}`, {
+            let startDateStr = this.state.startDate ? this.state.startDate.toISOString().replace('T', ' ').slice(0, -5) : new Date("2019-01-01T01:00:00Z").toISOString().replace('T', ' ').slice(0, -5);
+            let endDateStr = this.state.endDate ? this.state.endDate.toISOString().replace('T', ' ').slice(0, -5) : new Date().toISOString().replace('T', ' ').slice(0, -5);
+            axios.get(`https://mlffts-api.herokuapp.com/transaction?status=1&date_from=${startDateStr}&date_to=${endDateStr}&limit=2&offset=${this.state.transList.length}&lp_id=${this.state.lpSelected.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(res => {
                 let oldData = this.state.transList;
@@ -159,7 +162,7 @@ class Home extends React.Component {
     }
 
     clearSearch = () => {
-        this.setState({ transList: [], isSearchMode: false, isNotFound:false }, () => { this.loadData(); })
+        this.setState({ lpSelected:null ,startDate: null,endDate: null,transList: [], isSearchMode: false, isNotFound:false }, () => { this.loadData(); })
     }
 
     logout = () => {

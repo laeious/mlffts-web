@@ -44,7 +44,7 @@ export default (props) => {
         {
             title: 'Location Out',
             name: 'location_out'
-        },
+        }
     ]);
 
     const [rows, setRows] = useState([]);
